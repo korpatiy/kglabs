@@ -1,0 +1,3 @@
+/home/korpatiy/Рабочий стол/kglab2/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/korpatiy/Рабочий стол/kglab2/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/korpatiy/Рабочий стол/kglab2/cmake-build-debug/CMakeFiles/kglab2.dir

@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/kglab2.dir/main.cpp.o  -o kglab2  -lglfw -lGLEW -lGLEW -lGLU -lGL 

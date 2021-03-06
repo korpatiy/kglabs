@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/korpatiy/Рабочий стол/kglab2/main.cpp
+iostream
+-
+GL/glew.h
+-
+GLFW/glfw3.h
+-
+
