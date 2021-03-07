@@ -82,32 +82,49 @@ bool createShaderProgram() {
             "layout(location = 0) in vec2 a_pos;"
             ""
             "uniform mat4 u_mvp;"
-            //"uniform mat4 u_mv;"
+            "uniform mat4 u_mv;"
             ""
-            //"out vec3 v_normal;"
-            //"out vec3 v_pos;"
+            "out vec3 v_normal;"
+            "out vec3 v_pos;"
             ""
-            "float f(vec2 p) {return sqrt(p.x*p.x+p.y*p.y)*sin(sqrt(p.x*p.x+p.y*p.y));}"
+            "float f(vec2 p) {return length(vec2(p.x,p.y))*sin(length(vec2(p.x,p.y)));}"
+            "vec3 grad(vec2 p) "
+            "{"
+            "float dx = p.x * sin(length(vec2(p.x,p.y))) / length(vec2(p.x,p.y)) + cos(length(vec2(p.x,p.y))) * p.x;"
+            "float dy = p.y * sin(length(vec2(p.x,p.y))) / length(vec2(p.x,p.y)) + cos(length(vec2(p.x,p.y))) * p.y;"
+            "return vec3(dx, 1.0, dy);"
+            "}"
             ""
             "void main()"
             "{"
             "    float y = f(a_pos);"
-            //"    vec p0 = vec4(a_pos[0], y, a_pos[1], 1.0);"
-            //"    v_normal = transpose(inverse(mat3(u_mv))) * normalize(grad(a_pos));"
-            //"    v_pos = vec3(u_mv * p0);"
-            "    gl_Position = u_mvp * vec4(a_pos[0], y, a_pos[1], 1.0);"
+            "    vec4 p0 = vec4(a_pos[0], y, a_pos[1], 1.0);"
+            "    v_normal = transpose(inverse(mat3(u_mv))) * normalize(grad(a_pos));"
+            "    v_pos = vec3(u_mv * p0);"
+            "    gl_Position = u_mvp * p0;"
             "}";
 
     const GLchar fsh[] =
             "#version 330\n"
             ""
-            //"in vec3 v_color;"
+            "in vec3 v_normal;"
+            "in vec3 v_pos;"
             ""
             "layout(location = 0) out vec4 o_color;"
             ""
             "void main()"
             "{"
-            "   o_color = vec4(1.0, 0.0, 0.0, 1.0);"
+            "   float S = 10;"
+            "   vec3 color = vec3(1, 0, 0);"
+            "   vec3 n = normalize(v_normal);"
+            "   vec3 E = vec3(0, 0, 0);"
+            "   vec3 L = vec3(5, 5, 0);"
+            "   vec3 l = normalize(v_pos - L);"
+            "   float d = max(dot(n, -l), 0.3);"
+            "   vec3 e = normalize(E - v_pos);"
+            "   vec3 h = normalize(-l + e);"
+            "   float s = pow(max(dot(n, h), 0.0), S);"
+            "   o_color = vec4(color * d +s * vec3(1.0, 1.0, 1.0),1.0);"
             "}";
 
     GLuint vertexShader, fragmentShader;
@@ -118,6 +135,7 @@ bool createShaderProgram() {
     g_shaderProgram = createProgram(vertexShader, fragmentShader);
 
     g_uMVP = glGetUniformLocation(g_shaderProgram, "u_mvp");
+    g_uVM = glGetUniformLocation(g_shaderProgram, "u_mv");
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
@@ -198,27 +216,25 @@ void draw() {
     glBindVertexArray(g_model.vao);
 
     glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3(0.0f, 0.0f, -30.0f));
-    //поворот
-    model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-    //масштабирование
-    model = glm::scale(model, glm::vec3(1.5f));
+    //model = glm::translate(model, glm::vec3(0.0f, 0.0f, -30.0f));
+    //model = glm::rotate(model, glm::radians(60.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    model = glm::scale(model, glm::vec3(2.0f));
 
-    const float radius = 60.0f;
+    const float radius = 30.0f;
     float camX = sin(glfwGetTime()) * radius;
     float camZ = cos(glfwGetTime()) * radius;
     glm::mat4 view;
-    view = glm::lookAt(glm::vec3(camX, 0.0f, camZ),
+    view = glm::lookAt(glm::vec3(camX, 20.0f, camZ),
                        glm::vec3(0.0f, 0.0f, 0.0f),
                        glm::vec3(0.0f, 1.0f, 0.0f));
+    //glm::mat4 view = glm::mat4(1.0f);
+    //view = glm::rotate(view, glm::radians(30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
-    /*glm::mat4 view = glm::mat4(1.0f);
-    view = glm::rotate(view, glm::radians(25.0f), glm::vec3(1.0f, 0.0f, 0.0f));*/
 
-    glm::mat4 projection = glm::perspective(glm::radians(60.0f), 4.0f / 3.0f, 0.1f, 100.f);
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.f);
 
     glUniformMatrix4fv(g_uMVP, 1, GL_FALSE, glm::value_ptr(projection * view * model));
-    //glUniformMatrix4fv(g_uVM, 1, GL_FALSE, glm::value_ptr(view * model));
+    glUniformMatrix4fv(g_uVM, 1, GL_FALSE, glm::value_ptr(view * model));
 
     glDrawElements(GL_TRIANGLES, g_model.indexCount, GL_UNSIGNED_INT, NULL);
 }
