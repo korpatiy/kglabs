@@ -1,13 +1,17 @@
 #include <iostream>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <chrono>
+#include "glm/ext.hpp"
+#include "glm/matrix.hpp"
+
 
 using namespace std;
 
 GLFWwindow *g_window;
 
 GLuint g_shaderProgram;
-GLint g_uMVP;
+GLint g_uMVP, g_uVM;
 
 class Model {
 public:
@@ -75,29 +79,35 @@ bool createShaderProgram() {
     const GLchar vsh[] =
             "#version 330\n"
             ""
-            "layout(location = 0) in vec3 a_position;"
-            "layout(location = 1) in vec3 a_color;"
+            "layout(location = 0) in vec2 a_pos;"
             ""
             "uniform mat4 u_mvp;"
+            //"uniform mat4 u_mv;"
             ""
-            "out vec3 v_color;"
+            //"out vec3 v_normal;"
+            //"out vec3 v_pos;"
+            ""
+            "float f(vec2 p) {return sqrt(p.x*p.x+p.y*p.y)*sin(sqrt(p.x*p.x+p.y*p.y));}"
             ""
             "void main()"
             "{"
-            "    v_color = a_color;"
-            "    gl_Position = u_mvp * vec4(a_position, 1.0);"
+            "    float y = f(a_pos);"
+            //"    vec p0 = vec4(a_pos[0], y, a_pos[1], 1.0);"
+            //"    v_normal = transpose(inverse(mat3(u_mv))) * normalize(grad(a_pos));"
+            //"    v_pos = vec3(u_mv * p0);"
+            "    gl_Position = u_mvp * vec4(a_pos[0], y, a_pos[1], 1.0);"
             "}";
 
     const GLchar fsh[] =
             "#version 330\n"
             ""
-            "in vec3 v_color;"
+            //"in vec3 v_color;"
             ""
             "layout(location = 0) out vec4 o_color;"
             ""
             "void main()"
             "{"
-            "   o_color = vec4(v_color, 1.0);"
+            "   o_color = vec4(1.0, 0.0, 0.0, 1.0);"
             "}";
 
     GLuint vertexShader, fragmentShader;
@@ -115,21 +125,33 @@ bool createShaderProgram() {
     return g_shaderProgram != 0;
 }
 
-void getMas() {
-
-}
-
 bool createModel() {
 
-    size_t n = 5;
+    size_t n = 100;
     size_t vertSize = 2 * n * n;
     size_t idxSize = (n - 1) * (n - 1) * 6;
 
     auto *vertices = new GLfloat[vertSize];
-    for (int i = 0; i < n; i++) {
-
+    for (size_t i = 0; i < n; i++) {
+        for (size_t j = 0; j < n; j++) {
+            size_t idx = 2 * (i * n + j);
+            vertices[idx] = 0.1f * (j - n / 2.0f);
+            vertices[idx + 1] = 0.1f * (i - n / 2.0f);
+        }
     }
-    //auto *indices = new GLuint[idxSize];
+
+    auto *indices = new GLuint[idxSize];
+    for (size_t i = 0; i < n - 1; i++) {
+        for (size_t j = 0; j < n - 1; j++) {
+            size_t idx = 6 * (i * (n - 1) + j);
+            indices[idx] = n * i + j;
+            indices[idx + 1] = n * i + j + 1;
+            indices[idx + 2] = n * (i + 1) + j + 1;
+            indices[idx + 3] = n * (i + 1) + j + 1;
+            indices[idx + 4] = n * (i + 1) + j;
+            indices[idx + 5] = n * i + j;
+        }
+    }
 
 
     glGenVertexArrays(1, &g_model.vao);
@@ -137,20 +159,21 @@ bool createModel() {
 
     glGenBuffers(1, &g_model.vbo);
     glBindBuffer(GL_ARRAY_BUFFER, g_model.vbo);
-    //glBufferData(GL_ARRAY_BUFFER, vertSize * sizeof(GLfloat), mas, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertSize * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
 
     glGenBuffers(1, &g_model.ibo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, g_model.ibo);
-    // glBufferData(GL_ELEMENT_ARRAY_BUFFER, idxSize * sizeof(GLuint), indices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, idxSize * sizeof(GLuint), indices, GL_STATIC_DRAW);
 
-    // g_model.indexCount = idxSize;
+    g_model.indexCount = idxSize;
 
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (const GLvoid *) 0);
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (const GLvoid *) (3 * sizeof(GLfloat)));
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (const GLvoid *) 0);
+    //glEnableVertexAttribArray(1);
+    //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (const GLvoid *) (3 * sizeof(GLfloat)));
 
-    delete[]vertices;
+    delete[] vertices;
+    delete[] indices;
     return g_model.vbo != 0 && g_model.ibo != 0 && g_model.vao != 0;
 }
 
@@ -174,15 +197,28 @@ void draw() {
     glUseProgram(g_shaderProgram);
     glBindVertexArray(g_model.vao);
 
-    const GLfloat mvp[] =
-            {
-                    1.708748f, -1.478188f, -0.360884f, -0.353738f,
-                    0.000000f, 1.208897f, -0.883250f, -0.865760f,
-                    -1.707388f, -1.479366f, -0.361171f, -0.354019f,
-                    0.000000f, 0.000000f, 4.898990f, 5.000000f
-            };
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3(0.0f, 0.0f, -30.0f));
+    //поворот
+    model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    //масштабирование
+    model = glm::scale(model, glm::vec3(1.5f));
 
-    glUniformMatrix4fv(g_uMVP, 1, GL_FALSE, mvp);
+    const float radius = 60.0f;
+    float camX = sin(glfwGetTime()) * radius;
+    float camZ = cos(glfwGetTime()) * radius;
+    glm::mat4 view;
+    view = glm::lookAt(glm::vec3(camX, 0.0f, camZ),
+                       glm::vec3(0.0f, 0.0f, 0.0f),
+                       glm::vec3(0.0f, 1.0f, 0.0f));
+
+    /*glm::mat4 view = glm::mat4(1.0f);
+    view = glm::rotate(view, glm::radians(25.0f), glm::vec3(1.0f, 0.0f, 0.0f));*/
+
+    glm::mat4 projection = glm::perspective(glm::radians(60.0f), 4.0f / 3.0f, 0.1f, 100.f);
+
+    glUniformMatrix4fv(g_uMVP, 1, GL_FALSE, glm::value_ptr(projection * view * model));
+    //glUniformMatrix4fv(g_uVM, 1, GL_FALSE, glm::value_ptr(view * model));
 
     glDrawElements(GL_TRIANGLES, g_model.indexCount, GL_UNSIGNED_INT, NULL);
 }
@@ -252,11 +288,15 @@ int main() {
 
     // Initialize graphical resources.
     bool isOk = init();
-
+    //g_callTime = chrono::system_clock::now();
     if (isOk) {
         // Main loop until window closed or escape pressed.
         while (glfwGetKey(g_window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(g_window) == 0) {
             // Draw scene.
+
+            /* auto callTime = chrono::system_clock::now();
+             chrono::duration<double> elapsed = callTime - g_callTime;
+             g_callTime = callTime;*/
             draw();
 
             // Swap buffers.

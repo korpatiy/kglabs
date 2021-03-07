@@ -13,4 +13,10 @@ GL/glew.h
 -
 GLFW/glfw3.h
 -
+chrono
+-
+glm/ext.hpp
+/home/korpatiy/Рабочий стол/kglab2/glm/ext.hpp
+glm/matrix.hpp
+/home/korpatiy/Рабочий стол/kglab2/glm/matrix.hpp
 
