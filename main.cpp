@@ -87,11 +87,25 @@ bool createShaderProgram() {
             "out vec3 v_normal;"
             "out vec3 v_pos;"
             ""
-            "float f(vec2 p) {return length(vec2(p.x,p.y))*sin(length(vec2(p.x,p.y)));}"
-            "vec3 grad(vec2 p) "
+            /*"float f(vec2 p) {return 0.05*(1-p.x*p.y)*sin(1-p.x*p.y);}"
+            "vec3 grad(vec2 p)"
+            "{"
+            "float dx = -0.05 * p.x * sin(1-p.x*p.y) - 0.05 * p.x * cos(1-p.x*p.y)*(1-p.x*p.y);"
+            "float dy = -0.05 * p.y * sin(1-p.x*p.y) - 0.05 * p.y * cos(1-p.x*p.y)*(1-p.x*p.y);"
+            "return vec3(dx, 1.0, dy);"
+            "}"*/
+            /* "float f(vec2 p) {return length(vec2(p.x,p.y))*sin(length(vec2(p.x,p.y)));}"
+            "vec3 grad(vec2 p)"
             "{"
             "float dx = p.x * sin(length(vec2(p.x,p.y))) / length(vec2(p.x,p.y)) + cos(length(vec2(p.x,p.y))) * p.x;"
             "float dy = p.y * sin(length(vec2(p.x,p.y))) / length(vec2(p.x,p.y)) + cos(length(vec2(p.x,p.y))) * p.y;"
+            "return vec3(dx, 1.0, dy);"
+            "}"*/
+            "float f(vec2 p) { return length(p) * sin(length(p)); }"
+            "vec3 grad(vec2 p)"
+            "{"
+            "float dx =-p.x * sin(length(p)) / length(p) - cos(length(p)) * p.x;"
+            "float dy =-p.y * sin(length(p)) / length(p) - cos(length(p)) * p.y;"
             "return vec3(dx, 1.0, dy);"
             "}"
             ""
@@ -125,6 +139,7 @@ bool createShaderProgram() {
             "   vec3 h = normalize(-l + e);"
             "   float s = pow(max(dot(n, h), 0.0), S);"
             "   o_color = vec4(color * d +s * vec3(1.0, 1.0, 1.0),1.0);"
+            //"   o_color = vec4(1,0,0,1);"
             "}";
 
     GLuint vertexShader, fragmentShader;
@@ -208,7 +223,7 @@ void reshape(GLFWwindow *window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
-void draw() {
+void draw(float d) {
     // Clear color buffer.
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -216,20 +231,19 @@ void draw() {
     glBindVertexArray(g_model.vao);
 
     glm::mat4 model = glm::mat4(1.0f);
-    //model = glm::translate(model, glm::vec3(0.0f, 0.0f, -30.0f));
-    //model = glm::rotate(model, glm::radians(60.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    //model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+    //model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     model = glm::scale(model, glm::vec3(2.0f));
 
     const float radius = 30.0f;
     float camX = sin(glfwGetTime()) * radius;
     float camZ = cos(glfwGetTime()) * radius;
     glm::mat4 view;
-    view = glm::lookAt(glm::vec3(camX, 20.0f, camZ),
+    view = glm::lookAt(glm::vec3(camX, 30.0f, camZ),
                        glm::vec3(0.0f, 0.0f, 0.0f),
                        glm::vec3(0.0f, 1.0f, 0.0f));
     //glm::mat4 view = glm::mat4(1.0f);
-    //view = glm::rotate(view, glm::radians(30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-
+    // view = glm::rotate(view, glm::radians(d*30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.f);
 
@@ -304,16 +318,16 @@ int main() {
 
     // Initialize graphical resources.
     bool isOk = init();
-    //g_callTime = chrono::system_clock::now();
+    auto g_callTime = chrono::system_clock::now();
     if (isOk) {
         // Main loop until window closed or escape pressed.
         while (glfwGetKey(g_window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(g_window) == 0) {
             // Draw scene.
 
-            /* auto callTime = chrono::system_clock::now();
-             chrono::duration<double> elapsed = callTime - g_callTime;
-             g_callTime = callTime;*/
-            draw();
+            auto callTime = chrono::system_clock::now();
+            chrono::duration<double> elapsed = callTime - g_callTime;
+            g_callTime = callTime;
+            draw(elapsed.count());
 
             // Swap buffers.
             glfwSwapBuffers(g_window);
