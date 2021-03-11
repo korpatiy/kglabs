@@ -87,6 +87,8 @@ bool createShaderProgram() {
             "out vec3 v_normal;"
             "out vec3 v_pos;"
             ""
+            "float a = -0.7;"
+            ""
             /*"float f(vec2 p) {return 0.05*(1-p.x*p.y)*sin(1-p.x*p.y);}"
             "vec3 grad(vec2 p)"
             "{"
@@ -101,11 +103,11 @@ bool createShaderProgram() {
             "float dy = p.y * sin(length(vec2(p.x,p.y))) / length(vec2(p.x,p.y)) + cos(length(vec2(p.x,p.y))) * p.y;"
             "return vec3(dx, 1.0, dy);"
             "}"*/
-            "float f(vec2 p) { return length(p) * sin(length(p)); }"
+            "float f(vec2 p) { return a * length(p) * sin(length(p)); }"
             "vec3 grad(vec2 p)"
             "{"
-            "float dx =-p.x * sin(length(p)) / length(p) - cos(length(p)) * p.x;"
-            "float dy =-p.y * sin(length(p)) / length(p) - cos(length(p)) * p.y;"
+            "float dx =-p.x *a* sin(length(p)) / length(p) - cos(length(p)) * a*p.x;"
+            "float dy =-p.y *a* sin(length(p)) / length(p) - cos(length(p)) * a*p.y;"
             "return vec3(dx, 1.0, dy);"
             "}"
             ""
@@ -128,7 +130,7 @@ bool createShaderProgram() {
             ""
             "void main()"
             "{"
-            "   float S = 40;"
+            "   float S = 20;"
             "   vec3 color = vec3(1, 0, 0);"
             "   vec3 n = normalize(v_normal);"
             "   vec3 E = vec3(0, 0, 0);"
@@ -139,7 +141,7 @@ bool createShaderProgram() {
             "   vec3 h = normalize(-l + e);"
             "   float s = pow(max(dot(n, h), 0.0), S);"
             "   o_color = vec4(color * d +s * vec3(1.0, 1.0, 1.0),1.0);"
-            //"   o_color = vec4(1,0,0,1);"
+            //"   o_color = vec4(abs(n),1);"
             "}";
 
     GLuint vertexShader, fragmentShader;
