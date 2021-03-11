@@ -12,6 +12,7 @@ GLFWwindow *g_window;
 
 GLuint g_shaderProgram;
 GLint g_uMVP, g_uVM;
+glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.f);
 
 class Model {
 public:
@@ -222,6 +223,7 @@ bool init() {
 }
 
 void reshape(GLFWwindow *window, int width, int height) {
+    projection = glm::perspective(glm::radians(45.0f), GLfloat(width) / GLfloat(height), 0.1f, 100.f);
     glViewport(0, 0, width, height);
 }
 
@@ -241,9 +243,6 @@ void draw(GLfloat delta) {
     glm::mat4 view = lookAt(glm::vec3(10.0f, 20.0f, 30.0f),
                             glm::vec3(0.0f, 0.0f, 0.0f),
                             glm::vec3(0.0f, 1.0f, 0.0f));
-
-
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.f);
 
     glUniformMatrix4fv(g_uMVP, 1, GL_FALSE, glm::value_ptr(projection * view * model));
     glUniformMatrix4fv(g_uVM, 1, GL_FALSE, glm::value_ptr(view * model));
