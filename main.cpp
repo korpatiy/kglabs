@@ -128,11 +128,11 @@ bool createShaderProgram() {
             ""
             "void main()"
             "{"
-            "   float S = 10;"
+            "   float S = 40;"
             "   vec3 color = vec3(1, 0, 0);"
             "   vec3 n = normalize(v_normal);"
             "   vec3 E = vec3(0, 0, 0);"
-            "   vec3 L = vec3(5, 5, 0);"
+            "   vec3 L = vec3(5,5,0);"
             "   vec3 l = normalize(v_pos - L);"
             "   float d = max(dot(n, -l), 0.3);"
             "   vec3 e = normalize(E - v_pos);"
@@ -223,7 +223,7 @@ void reshape(GLFWwindow *window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
-void draw(float d) {
+void draw(GLfloat delta) {
     // Clear color buffer.
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -231,19 +231,15 @@ void draw(float d) {
     glBindVertexArray(g_model.vao);
 
     glm::mat4 model = glm::mat4(1.0f);
-    //model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-    //model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+    model = glm::rotate(model, glm::radians(delta), glm::vec3(0.0f, 1.0f, 0.0f));
     model = glm::scale(model, glm::vec3(2.0f));
 
-    const float radius = 30.0f;
-    float camX = sin(glfwGetTime()) * radius;
-    float camZ = cos(glfwGetTime()) * radius;
-    glm::mat4 view;
-    view = glm::lookAt(glm::vec3(camX, 30.0f, camZ),
-                       glm::vec3(0.0f, 0.0f, 0.0f),
-                       glm::vec3(0.0f, 1.0f, 0.0f));
-    //glm::mat4 view = glm::mat4(1.0f);
-    // view = glm::rotate(view, glm::radians(d*30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+    glm::mat4 view = lookAt(glm::vec3(10.0f, 20.0f, 30.0f),
+                            glm::vec3(0.0f, 0.0f, 0.0f),
+                            glm::vec3(0.0f, 1.0f, 0.0f));
+
 
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.f);
 
@@ -320,14 +316,15 @@ int main() {
     bool isOk = init();
     auto g_callTime = chrono::system_clock::now();
     if (isOk) {
+
         // Main loop until window closed or escape pressed.
+        int delta = 0;
         while (glfwGetKey(g_window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(g_window) == 0) {
             // Draw scene.
 
-            auto callTime = chrono::system_clock::now();
-            chrono::duration<double> elapsed = callTime - g_callTime;
-            g_callTime = callTime;
-            draw(elapsed.count());
+            if (delta > 360) delta = 0;
+            draw(delta);
+            delta++;
 
             // Swap buffers.
             glfwSwapBuffers(g_window);
