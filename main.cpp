@@ -5,14 +5,21 @@
 #include "glm/ext.hpp"
 #include "glm/matrix.hpp"
 
+#define STB_IMAGE_IMPLEMENTATION
+
+#include "stb_image.h"
 
 using namespace std;
 
+const size_t texCount = 2;
 GLFWwindow *g_window;
 
 GLuint g_shaderProgram;
 GLint g_uMVP, g_uVM;
+GLint mapLocation[texCount];
 glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.f);
+
+GLuint textures[texCount];
 
 class Model {
 public:
@@ -87,23 +94,10 @@ bool createShaderProgram() {
             ""
             "out vec3 v_normal;"
             "out vec3 v_pos;"
+            "out vec2 v_texCoord;"
             ""
             "float a = -0.7;"
             ""
-            /*"float f(vec2 p) {return 0.05*(1-p.x*p.y)*sin(1-p.x*p.y);}"
-            "vec3 grad(vec2 p)"
-            "{"
-            "float dx = -0.05 * p.x * sin(1-p.x*p.y) - 0.05 * p.x * cos(1-p.x*p.y)*(1-p.x*p.y);"
-            "float dy = -0.05 * p.y * sin(1-p.x*p.y) - 0.05 * p.y * cos(1-p.x*p.y)*(1-p.x*p.y);"
-            "return vec3(dx, 1.0, dy);"
-            "}"*/
-            /* "float f(vec2 p) {return length(vec2(p.x,p.y))*sin(length(vec2(p.x,p.y)));}"
-            "vec3 grad(vec2 p)"
-            "{"
-            "float dx = p.x * sin(length(vec2(p.x,p.y))) / length(vec2(p.x,p.y)) + cos(length(vec2(p.x,p.y))) * p.x;"
-            "float dy = p.y * sin(length(vec2(p.x,p.y))) / length(vec2(p.x,p.y)) + cos(length(vec2(p.x,p.y))) * p.y;"
-            "return vec3(dx, 1.0, dy);"
-            "}"*/
             "float f(vec2 p) { return a * length(p) * sin(length(p)); }"
             "vec3 grad(vec2 p)"
             "{"
@@ -119,6 +113,7 @@ bool createShaderProgram() {
             "    v_normal = transpose(inverse(mat3(u_mv))) * normalize(grad(a_pos));"
             "    v_pos = vec3(u_mv * p0);"
             "    gl_Position = u_mvp * p0;"
+            "    v_texCoord = a_pos / 100;"
             "}";
 
     const GLchar fsh[] =
@@ -126,8 +121,12 @@ bool createShaderProgram() {
             ""
             "in vec3 v_normal;"
             "in vec3 v_pos;"
+            "in vec2 v_texCoord;"
             ""
             "layout(location = 0) out vec4 o_color;"
+            ""
+            "uniform sampler2D u_map0;"
+            "uniform sampler2D u_map1;"
             ""
             "void main()"
             "{"
@@ -141,7 +140,10 @@ bool createShaderProgram() {
             "   vec3 e = normalize(E - v_pos);"
             "   vec3 h = normalize(-l + e);"
             "   float s = pow(max(dot(n, h), 0.0), S);"
-            "   o_color = vec4(color * d +s * vec3(1.0, 1.0, 1.0),1.0);"
+            "   vec4 texColor = mix(texture(u_map0, v_texCoord), texture(u_map1, v_texCoord), 0.5);"
+            "   o_color = vec4(texColor * d + s * vec4(1.0));"
+            //"    o_color = texture(u_map0, v_texCoord);"
+            //"   o_color = vec4(color * d +s * vec3(1.0, 1.0, 1.0),1.0);"
             //"   o_color = vec4(abs(n),1);"
             "}";
 
@@ -213,13 +215,41 @@ bool createModel() {
     return g_model.vbo != 0 && g_model.ibo != 0 && g_model.vao != 0;
 }
 
+bool createTexture() {
+    for (size_t i = 0; i < texCount; i++) {
+        GLsizei texW, texH, nrChannels;
+        GLvoid *image;
+        glGenTextures(1, &textures[i]);
+        glBindTexture(GL_TEXTURE_2D, textures[i]);
+
+        string way = "../textures/texture" + to_string(i) + ".jpg";
+        image = stbi_load(way.c_str(), &texW, &texH, &nrChannels, 0);
+        if (image) {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texW, texH, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+            glGenerateMipmap(GL_TEXTURE_2D);
+        } else {
+            cout << "Failed to load texture" << std::endl;
+            return false;
+        }
+        stbi_image_free(image);
+        // Установка параметров наложения текстуры
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        // Установка параметров фильтрации текстуры
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        mapLocation[i] = glGetUniformLocation(g_shaderProgram, ("u_map" + to_string(i)).c_str());
+    }
+    return true;
+}
+
 bool init() {
     // Set initial color of color buffer to white.
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
     glEnable(GL_DEPTH_TEST);
 
-    return createShaderProgram() && createModel();
+    return createShaderProgram() && createModel() && createTexture();
 }
 
 void reshape(GLFWwindow *window, int width, int height) {
@@ -230,6 +260,12 @@ void reshape(GLFWwindow *window, int width, int height) {
 void draw(GLfloat delta) {
     // Clear color buffer.
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    for (int i = 0; i < texCount; ++i) {
+        glActiveTexture(GL_TEXTURE0 + i);
+        glBindTexture(GL_TEXTURE_2D, textures[i]);
+        glUniform1i(mapLocation[i], i);
+    }
 
     glUseProgram(g_shaderProgram);
     glBindVertexArray(g_model.vao);
@@ -259,6 +295,9 @@ void cleanup() {
         glDeleteBuffers(1, &g_model.ibo);
     if (g_model.vao != 0)
         glDeleteVertexArrays(1, &g_model.vao);
+    for (unsigned int &texture : textures) {
+        glDeleteTextures(1, &texture);
+    }
 }
 
 bool initOpenGL() {
