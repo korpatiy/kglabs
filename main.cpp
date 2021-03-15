@@ -113,7 +113,7 @@ bool createShaderProgram() {
             "    v_normal = transpose(inverse(mat3(u_mv))) * normalize(grad(a_pos));"
             "    v_pos = vec3(u_mv * p0);"
             "    gl_Position = u_mvp * p0;"
-            "    v_texCoord = a_pos / 100;"
+            "    v_texCoord = a_pos / 20;"
             "}";
 
     const GLchar fsh[] =
@@ -233,8 +233,8 @@ bool createTexture() {
         }
         stbi_image_free(image);
         // Установка параметров наложения текстуры
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         // Установка параметров фильтрации текстуры
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -276,7 +276,7 @@ void draw(GLfloat delta) {
     model = glm::scale(model, glm::vec3(2.0f));
 
 
-    glm::mat4 view = lookAt(glm::vec3(10.0f, 20.0f, 30.0f),
+    glm::mat4 view = lookAt(glm::vec3(10.0f, 40.0f, 30.0f),
                             glm::vec3(0.0f, 0.0f, 0.0f),
                             glm::vec3(0.0f, 1.0f, 0.0f));
 
