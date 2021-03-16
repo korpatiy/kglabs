@@ -15,7 +15,7 @@ const size_t texCount = 2;
 GLFWwindow *g_window;
 
 GLuint g_shaderProgram;
-GLint g_uMVP, g_uVM;
+GLint g_uMVP, g_uVM, g_uL;
 GLint mapLocation[texCount];
 glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.f);
 
@@ -101,9 +101,15 @@ bool createShaderProgram() {
             "float f(vec2 p) { return a * length(p) * sin(length(p)); }"
             "vec3 grad(vec2 p)"
             "{"
-            "float dx =-p.x *a* sin(length(p)) / length(p) - cos(length(p)) * a*p.x;"
-            "float dy =-p.y *a* sin(length(p)) / length(p) - cos(length(p)) * a*p.y;"
+            "float len = length(p);"
+            "if (len == 0) return vec3(0,1,0);"
+            "else"
+            "{"
+            "float coefficient = a * (sin(len) / len + cos(len));"
+            "float dx = -p.x * coefficient;"
+            "float dy = -p.y * coefficient;"
             "return vec3(dx, 1.0, dy);"
+            "}"
             "}"
             ""
             "void main()"
@@ -113,7 +119,7 @@ bool createShaderProgram() {
             "    v_normal = transpose(inverse(mat3(u_mv))) * normalize(grad(a_pos));"
             "    v_pos = vec3(u_mv * p0);"
             "    gl_Position = u_mvp * p0;"
-            "    v_texCoord = a_pos / 20;"
+            "    v_texCoord = a_pos / 2;"
             "}";
 
     const GLchar fsh[] =
