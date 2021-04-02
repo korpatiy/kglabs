@@ -6,6 +6,14 @@
 
 #IncludeRegexTransform: 
 
+/home/korpatiy/Рабочий стол/kglab2/Headers/Bezier.h
+vector
+-
+iostream
+-
+cmath
+-
+
 /home/korpatiy/Рабочий стол/kglab2/Headers/Body.h
 GL/glew.h
 -
@@ -19,6 +27,10 @@ iostream
 /home/korpatiy/Рабочий стол/kglab2/Headers/iostream
 
 /home/korpatiy/Рабочий стол/kglab2/Headers/Model.h
+
+/home/korpatiy/Рабочий стол/kglab2/Sources/Bezier.cpp
+../Headers/Bezier.h
+/home/korpatiy/Рабочий стол/kglab2/Headers/Bezier.h
 
 /home/korpatiy/Рабочий стол/kglab2/Sources/Body.cpp
 stb_image.h

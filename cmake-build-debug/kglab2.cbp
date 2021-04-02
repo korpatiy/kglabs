@@ -82,7 +82,13 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/korpatiy/Рабочий стол/kglab2/Headers/Bezier.h">
+			<Option target="kglab2"/>
+		</Unit>
 		<Unit filename="/home/korpatiy/Рабочий стол/kglab2/Headers/Body.h">
+			<Option target="kglab2"/>
+		</Unit>
+		<Unit filename="/home/korpatiy/Рабочий стол/kglab2/Sources/Bezier.cpp">
 			<Option target="kglab2"/>
 		</Unit>
 		<Unit filename="/home/korpatiy/Рабочий стол/kglab2/Sources/Body.cpp">

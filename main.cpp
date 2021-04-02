@@ -74,6 +74,7 @@ void tearDownOpenGL() {
     glfwTerminate();
 }
 
+
 int main() {
     // Initialize OpenGL
     if (!initOpenGL())
