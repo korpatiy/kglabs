@@ -6,7 +6,6 @@
 #include "glm/matrix.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
-
 #include "stb_image.h"
 
 using namespace std;
@@ -119,7 +118,7 @@ bool createShaderProgram() {
             "    v_normal = transpose(inverse(mat3(u_mv))) * normalize(grad(a_pos));"
             "    v_pos = vec3(u_mv * p0);"
             "    gl_Position = u_mvp * p0;"
-            "    v_texCoord = a_pos / 2;"
+            "    v_texCoord = a_pos / 5;"
             "}";
 
     const GLchar fsh[] =
