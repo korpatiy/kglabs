@@ -143,6 +143,60 @@ kglab2/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kglab2.dir/build.make CMakeFiles/kglab2.dir/build
 .PHONY : kglab2/fast
 
+Sources/Body.o: Sources/Body.cpp.o
+
+.PHONY : Sources/Body.o
+
+# target to build an object file
+Sources/Body.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kglab2.dir/build.make CMakeFiles/kglab2.dir/Sources/Body.cpp.o
+.PHONY : Sources/Body.cpp.o
+
+Sources/Body.i: Sources/Body.cpp.i
+
+.PHONY : Sources/Body.i
+
+# target to preprocess a source file
+Sources/Body.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kglab2.dir/build.make CMakeFiles/kglab2.dir/Sources/Body.cpp.i
+.PHONY : Sources/Body.cpp.i
+
+Sources/Body.s: Sources/Body.cpp.s
+
+.PHONY : Sources/Body.s
+
+# target to generate assembly for a file
+Sources/Body.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kglab2.dir/build.make CMakeFiles/kglab2.dir/Sources/Body.cpp.s
+.PHONY : Sources/Body.cpp.s
+
+Sources/MainCreator.o: Sources/MainCreator.cpp.o
+
+.PHONY : Sources/MainCreator.o
+
+# target to build an object file
+Sources/MainCreator.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kglab2.dir/build.make CMakeFiles/kglab2.dir/Sources/MainCreator.cpp.o
+.PHONY : Sources/MainCreator.cpp.o
+
+Sources/MainCreator.i: Sources/MainCreator.cpp.i
+
+.PHONY : Sources/MainCreator.i
+
+# target to preprocess a source file
+Sources/MainCreator.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kglab2.dir/build.make CMakeFiles/kglab2.dir/Sources/MainCreator.cpp.i
+.PHONY : Sources/MainCreator.cpp.i
+
+Sources/MainCreator.s: Sources/MainCreator.cpp.s
+
+.PHONY : Sources/MainCreator.s
+
+# target to generate assembly for a file
+Sources/MainCreator.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kglab2.dir/build.make CMakeFiles/kglab2.dir/Sources/MainCreator.cpp.s
+.PHONY : Sources/MainCreator.cpp.s
+
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -179,6 +233,12 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... kglab2"
+	@echo "... Sources/Body.o"
+	@echo "... Sources/Body.i"
+	@echo "... Sources/Body.s"
+	@echo "... Sources/MainCreator.o"
+	@echo "... Sources/MainCreator.i"
+	@echo "... Sources/MainCreator.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

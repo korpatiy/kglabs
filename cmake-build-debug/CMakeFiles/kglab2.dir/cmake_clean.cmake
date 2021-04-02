@@ -1,4 +1,6 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/kglab2.dir/Sources/Body.cpp.o"
+  "CMakeFiles/kglab2.dir/Sources/MainCreator.cpp.o"
   "CMakeFiles/kglab2.dir/main.cpp.o"
   "kglab2"
   "kglab2.pdb"

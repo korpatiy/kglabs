@@ -82,6 +82,18 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/korpatiy/Рабочий стол/kglab2/Headers/Body.h">
+			<Option target="kglab2"/>
+		</Unit>
+		<Unit filename="/home/korpatiy/Рабочий стол/kglab2/Sources/Body.cpp">
+			<Option target="kglab2"/>
+		</Unit>
+		<Unit filename="/home/korpatiy/Рабочий стол/kglab2/Sources/MainCreator.cpp">
+			<Option target="kglab2"/>
+		</Unit>
+		<Unit filename="/home/korpatiy/Рабочий стол/kglab2/Sources/MainCreator.h">
+			<Option target="kglab2"/>
+		</Unit>
 		<Unit filename="/home/korpatiy/Рабочий стол/kglab2/main.cpp">
 			<Option target="kglab2"/>
 		</Unit>

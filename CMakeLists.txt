@@ -8,5 +8,5 @@ if(NOT OPENGL_FOUND)
 endif(NOT OPENGL_FOUND)
 set(GL_LIBRARY GL GLU X11)
 
-add_executable(kglab2 main.cpp)
+add_executable(kglab2 main.cpp Sources/Body.cpp Headers/Body.h Sources/MainCreator.cpp Sources/MainCreator.h)
 target_link_libraries(kglab2 glfw GLEW libGLEW.so libGLU.so libGL.so)

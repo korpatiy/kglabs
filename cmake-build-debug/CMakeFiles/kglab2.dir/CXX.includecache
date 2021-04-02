@@ -6,6 +6,34 @@
 
 #IncludeRegexTransform: 
 
+/home/korpatiy/Рабочий стол/kglab2/Headers/Body.h
+GL/glew.h
+-
+glm/ext.hpp
+/home/korpatiy/Рабочий стол/kglab2/Headers/glm/ext.hpp
+glm/matrix.hpp
+/home/korpatiy/Рабочий стол/kglab2/Headers/glm/matrix.hpp
+Model.h
+/home/korpatiy/Рабочий стол/kglab2/Headers/Model.h
+iostream
+/home/korpatiy/Рабочий стол/kglab2/Headers/iostream
+
+/home/korpatiy/Рабочий стол/kglab2/Headers/Model.h
+
+/home/korpatiy/Рабочий стол/kglab2/Sources/Body.cpp
+stb_image.h
+-
+../Headers/Body.h
+/home/korpatiy/Рабочий стол/kglab2/Headers/Body.h
+MainCreator.h
+/home/korpatiy/Рабочий стол/kglab2/Sources/MainCreator.h
+
+/home/korpatiy/Рабочий стол/kglab2/Sources/MainCreator.h
+GL/glew.h
+-
+iostream
+/home/korpatiy/Рабочий стол/kglab2/Sources/iostream
+
 /home/korpatiy/Рабочий стол/kglab2/main.cpp
 iostream
 -
@@ -15,10 +43,8 @@ GLFW/glfw3.h
 -
 chrono
 -
-glm/ext.hpp
-/home/korpatiy/Рабочий стол/kglab2/glm/ext.hpp
-glm/matrix.hpp
-/home/korpatiy/Рабочий стол/kglab2/glm/matrix.hpp
+Headers/Body.h
+/home/korpatiy/Рабочий стол/kglab2/Headers/Body.h
 stb_image.h
-/home/korpatiy/Рабочий стол/kglab2/stb_image.h
+-
 
