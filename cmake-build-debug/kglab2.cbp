@@ -88,10 +88,19 @@
 		<Unit filename="/home/korpatiy/Рабочий стол/kglab2/Headers/Body.h">
 			<Option target="kglab2"/>
 		</Unit>
+		<Unit filename="/home/korpatiy/Рабочий стол/kglab2/Headers/Curve.h">
+			<Option target="kglab2"/>
+		</Unit>
 		<Unit filename="/home/korpatiy/Рабочий стол/kglab2/Headers/Points.h">
 			<Option target="kglab2"/>
 		</Unit>
+		<Unit filename="/home/korpatiy/Рабочий стол/kglab2/Sources/Bezier.cpp">
+			<Option target="kglab2"/>
+		</Unit>
 		<Unit filename="/home/korpatiy/Рабочий стол/kglab2/Sources/Body.cpp">
+			<Option target="kglab2"/>
+		</Unit>
+		<Unit filename="/home/korpatiy/Рабочий стол/kglab2/Sources/Curve.cpp">
 			<Option target="kglab2"/>
 		</Unit>
 		<Unit filename="/home/korpatiy/Рабочий стол/kglab2/Sources/MainCreator.cpp">

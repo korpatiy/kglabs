@@ -4,25 +4,22 @@
 
 #ifndef KGLAB2_POINTS_H
 #define KGLAB2_POINTS_H
-#include <GL/glew.h>
-#include "glm/ext.hpp"
-#include "glm/matrix.hpp"
+
 #include "Model.h"
 #include "Bezier.h"
 
 class Points {
 public:
-    Model g_model;
-    GLuint g_shaderProgram;
-    GLint g_uMV;
-    vector<Point2D> wPoints;
-    vector<float> mPoints;
+    Model p_model;
+    GLuint p_shaderProgram;
+    GLint p_uMV;
+    vector<Point2D> base_points;
 
-    bool createShaderProgram();
+    bool createPointShaderProgram();
 
-    bool createModel();
+    bool createPointModel();
 
-    void draw();
+    void drawPoints();
 
     void cleanup();
 };

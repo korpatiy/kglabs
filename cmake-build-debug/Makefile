@@ -143,6 +143,33 @@ kglab2/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kglab2.dir/build.make CMakeFiles/kglab2.dir/build
 .PHONY : kglab2/fast
 
+Sources/Bezier.o: Sources/Bezier.cpp.o
+
+.PHONY : Sources/Bezier.o
+
+# target to build an object file
+Sources/Bezier.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kglab2.dir/build.make CMakeFiles/kglab2.dir/Sources/Bezier.cpp.o
+.PHONY : Sources/Bezier.cpp.o
+
+Sources/Bezier.i: Sources/Bezier.cpp.i
+
+.PHONY : Sources/Bezier.i
+
+# target to preprocess a source file
+Sources/Bezier.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kglab2.dir/build.make CMakeFiles/kglab2.dir/Sources/Bezier.cpp.i
+.PHONY : Sources/Bezier.cpp.i
+
+Sources/Bezier.s: Sources/Bezier.cpp.s
+
+.PHONY : Sources/Bezier.s
+
+# target to generate assembly for a file
+Sources/Bezier.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kglab2.dir/build.make CMakeFiles/kglab2.dir/Sources/Bezier.cpp.s
+.PHONY : Sources/Bezier.cpp.s
+
 Sources/Body.o: Sources/Body.cpp.o
 
 .PHONY : Sources/Body.o
@@ -169,6 +196,33 @@ Sources/Body.s: Sources/Body.cpp.s
 Sources/Body.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kglab2.dir/build.make CMakeFiles/kglab2.dir/Sources/Body.cpp.s
 .PHONY : Sources/Body.cpp.s
+
+Sources/Curve.o: Sources/Curve.cpp.o
+
+.PHONY : Sources/Curve.o
+
+# target to build an object file
+Sources/Curve.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kglab2.dir/build.make CMakeFiles/kglab2.dir/Sources/Curve.cpp.o
+.PHONY : Sources/Curve.cpp.o
+
+Sources/Curve.i: Sources/Curve.cpp.i
+
+.PHONY : Sources/Curve.i
+
+# target to preprocess a source file
+Sources/Curve.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kglab2.dir/build.make CMakeFiles/kglab2.dir/Sources/Curve.cpp.i
+.PHONY : Sources/Curve.cpp.i
+
+Sources/Curve.s: Sources/Curve.cpp.s
+
+.PHONY : Sources/Curve.s
+
+# target to generate assembly for a file
+Sources/Curve.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kglab2.dir/build.make CMakeFiles/kglab2.dir/Sources/Curve.cpp.s
+.PHONY : Sources/Curve.cpp.s
 
 Sources/MainCreator.o: Sources/MainCreator.cpp.o
 
@@ -260,9 +314,15 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... kglab2"
+	@echo "... Sources/Bezier.o"
+	@echo "... Sources/Bezier.i"
+	@echo "... Sources/Bezier.s"
 	@echo "... Sources/Body.o"
 	@echo "... Sources/Body.i"
 	@echo "... Sources/Body.s"
+	@echo "... Sources/Curve.o"
+	@echo "... Sources/Curve.i"
+	@echo "... Sources/Curve.s"
 	@echo "... Sources/MainCreator.o"
 	@echo "... Sources/MainCreator.i"
 	@echo "... Sources/MainCreator.s"

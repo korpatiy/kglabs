@@ -4,10 +4,12 @@
 #include "Headers/Body.h"
 #include "Headers/Bezier.h"
 #include "Headers/Points.h"
+#include "Headers/Curve.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 
 #include <stb_image.h>
+#include <algorithm>
 
 using namespace std;
 
@@ -15,7 +17,9 @@ GLFWwindow *g_window;
 
 Body body;
 Points points;
+Curve curve;
 
+void calculatePoints();
 
 void reshape(GLFWwindow *window, int width, int height) {
     body.projection = glm::perspective(glm::radians(45.0f), GLfloat(width) / GLfloat(height), 0.1f, 100.f);
@@ -69,23 +73,6 @@ void tearDownOpenGL() {
     glfwTerminate();
 }
 
-vector<float> buildModelPts(vector<Segment> splines, vector<Point2D> windowPts) {
-    assert(splines.size() + 1 == windowPts.size());
-    vector<float> anspts;
-    int width, height = 0;
-    glfwGetWindowSize(g_window, &width, &height);
-
-    for (auto s : splines) {
-        for (int i = 0; i < RESOLUTION; ++i) {
-            Point2D p = s.calc((double) i / (double) RESOLUTION);
-            anspts.push_back(2 * p.x / width - 1);
-            anspts.push_back(2 * p.y / height - 1);
-        }
-    }
-
-    return anspts;
-}
-
 void mouse_button_callback(GLFWwindow *window, int button, int action, int mods) {
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
         int width = 0, height = 0;
@@ -93,19 +80,26 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
         glfwGetCursorPos(window, &x_pos, &y_pos);
         glfwGetWindowSize(g_window, &width, &height);
 
-        points.wPoints.emplace_back(x_pos,  height - y_pos);
+        x_pos = x_pos / width * 2. - 1.;
+        y_pos = 1. - y_pos / height * 2.;
 
-/*
-       if (points.wPoints.size() >= 2) {
-            tbezierSO0(points.wPoints, curve);
-            points.mPoints = buildModelPts(curve, points.wPoints);
-            points.createModel();
-        }*/
-        if (points.wPoints.size() >= 1) {
-            points.createModel();
-            points.draw();
-            glfwSwapBuffers(g_window);
-            glfwPollEvents();
+        points.base_points.emplace_back(x_pos, y_pos);
+
+        calculatePoints();
+        if (!curve.bezier_points.empty())
+            curve.createCurveModel();
+    }
+}
+
+void calculatePoints() {
+    vector<Segment> segment;
+    tbezierSO0(points.base_points, segment);
+    curve.bezier_points.clear();
+
+    for (auto s : segment) {
+        for (int i = 0; i < RESOLUTION; ++i) {
+            Point2D point = s.calc((double) i / (double) RESOLUTION);
+            curve.bezier_points.push_back(point);
         }
     }
 }
@@ -116,9 +110,10 @@ bool init() {
 
     glEnable(GL_DEPTH_TEST);
 
-    glfwSetMouseButtonCallback(g_window, mouse_button_callback);
-    return points.createShaderProgram() && points.createModel();
+    return points.createPointShaderProgram() && points.createPointModel()
+           && curve.createCurveShaderProgram();
 }
+
 
 int main() {
     // Initialize OpenGL
@@ -128,29 +123,32 @@ int main() {
     // Initialize graphical resources.
     bool isOk = init();
 
+    glfwSetMouseButtonCallback(g_window, mouse_button_callback);
+
     if (isOk) {
 
         // Main loop until window closed or escape pressed.
         int delta = 0;
         while (glfwGetKey(g_window, GLFW_KEY_ESCAPE) != GLFW_PRESS
-               && glfwWindowShouldClose(g_window) == 0
-               && glfwGetKey(g_window, GLFW_KEY_ENTER) != GLFW_PRESS) {
+               && glfwWindowShouldClose(g_window) == 0) {
 
             // Draw scene.
-
-            /*if (delta > 360) delta = 0;
-            body.draw(delta);
-            delta++;
+            points.drawPoints();
+            curve.drawCurve();
+            /*  if (delta > 360) delta = 0;
+              body.drawPoints(delta);
+              delta++;*/
 
             // Swap buffers.
-            glfwSwapBuffers(g_window);*/
+            glfwSwapBuffers(g_window);
             // Poll window events.
             glfwPollEvents();
         }
     }
 
     // Cleanup graphical resources.
-    body.cleanup();
+    points.cleanup();
+    curve.cleanup();
 
     // Tear down OpenGL.
     tearDownOpenGL();
