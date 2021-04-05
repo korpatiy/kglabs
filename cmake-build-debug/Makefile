@@ -143,33 +143,6 @@ kglab2/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kglab2.dir/build.make CMakeFiles/kglab2.dir/build
 .PHONY : kglab2/fast
 
-Sources/Bezier.o: Sources/Bezier.cpp.o
-
-.PHONY : Sources/Bezier.o
-
-# target to build an object file
-Sources/Bezier.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/kglab2.dir/build.make CMakeFiles/kglab2.dir/Sources/Bezier.cpp.o
-.PHONY : Sources/Bezier.cpp.o
-
-Sources/Bezier.i: Sources/Bezier.cpp.i
-
-.PHONY : Sources/Bezier.i
-
-# target to preprocess a source file
-Sources/Bezier.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/kglab2.dir/build.make CMakeFiles/kglab2.dir/Sources/Bezier.cpp.i
-.PHONY : Sources/Bezier.cpp.i
-
-Sources/Bezier.s: Sources/Bezier.cpp.s
-
-.PHONY : Sources/Bezier.s
-
-# target to generate assembly for a file
-Sources/Bezier.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/kglab2.dir/build.make CMakeFiles/kglab2.dir/Sources/Bezier.cpp.s
-.PHONY : Sources/Bezier.cpp.s
-
 Sources/Body.o: Sources/Body.cpp.o
 
 .PHONY : Sources/Body.o
@@ -224,6 +197,33 @@ Sources/MainCreator.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kglab2.dir/build.make CMakeFiles/kglab2.dir/Sources/MainCreator.cpp.s
 .PHONY : Sources/MainCreator.cpp.s
 
+Sources/Points.o: Sources/Points.cpp.o
+
+.PHONY : Sources/Points.o
+
+# target to build an object file
+Sources/Points.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kglab2.dir/build.make CMakeFiles/kglab2.dir/Sources/Points.cpp.o
+.PHONY : Sources/Points.cpp.o
+
+Sources/Points.i: Sources/Points.cpp.i
+
+.PHONY : Sources/Points.i
+
+# target to preprocess a source file
+Sources/Points.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kglab2.dir/build.make CMakeFiles/kglab2.dir/Sources/Points.cpp.i
+.PHONY : Sources/Points.cpp.i
+
+Sources/Points.s: Sources/Points.cpp.s
+
+.PHONY : Sources/Points.s
+
+# target to generate assembly for a file
+Sources/Points.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kglab2.dir/build.make CMakeFiles/kglab2.dir/Sources/Points.cpp.s
+.PHONY : Sources/Points.cpp.s
+
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -260,15 +260,15 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... kglab2"
-	@echo "... Sources/Bezier.o"
-	@echo "... Sources/Bezier.i"
-	@echo "... Sources/Bezier.s"
 	@echo "... Sources/Body.o"
 	@echo "... Sources/Body.i"
 	@echo "... Sources/Body.s"
 	@echo "... Sources/MainCreator.o"
 	@echo "... Sources/MainCreator.i"
 	@echo "... Sources/MainCreator.s"
+	@echo "... Sources/Points.o"
+	@echo "... Sources/Points.i"
+	@echo "... Sources/Points.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

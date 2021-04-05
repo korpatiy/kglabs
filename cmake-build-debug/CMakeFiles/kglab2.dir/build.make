@@ -116,25 +116,25 @@ CMakeFiles/kglab2.dir/Sources/MainCreator.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/kglab2.dir/Sources/MainCreator.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/korpatiy/Рабочий стол/kglab2/Sources/MainCreator.cpp" -o CMakeFiles/kglab2.dir/Sources/MainCreator.cpp.s
 
-CMakeFiles/kglab2.dir/Sources/Bezier.cpp.o: CMakeFiles/kglab2.dir/flags.make
-CMakeFiles/kglab2.dir/Sources/Bezier.cpp.o: ../Sources/Bezier.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/home/korpatiy/Рабочий стол/kglab2/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/kglab2.dir/Sources/Bezier.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/kglab2.dir/Sources/Bezier.cpp.o -c "/home/korpatiy/Рабочий стол/kglab2/Sources/Bezier.cpp"
+CMakeFiles/kglab2.dir/Sources/Points.cpp.o: CMakeFiles/kglab2.dir/flags.make
+CMakeFiles/kglab2.dir/Sources/Points.cpp.o: ../Sources/Points.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/home/korpatiy/Рабочий стол/kglab2/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/kglab2.dir/Sources/Points.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/kglab2.dir/Sources/Points.cpp.o -c "/home/korpatiy/Рабочий стол/kglab2/Sources/Points.cpp"
 
-CMakeFiles/kglab2.dir/Sources/Bezier.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/kglab2.dir/Sources/Bezier.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/korpatiy/Рабочий стол/kglab2/Sources/Bezier.cpp" > CMakeFiles/kglab2.dir/Sources/Bezier.cpp.i
+CMakeFiles/kglab2.dir/Sources/Points.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/kglab2.dir/Sources/Points.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/korpatiy/Рабочий стол/kglab2/Sources/Points.cpp" > CMakeFiles/kglab2.dir/Sources/Points.cpp.i
 
-CMakeFiles/kglab2.dir/Sources/Bezier.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/kglab2.dir/Sources/Bezier.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/korpatiy/Рабочий стол/kglab2/Sources/Bezier.cpp" -o CMakeFiles/kglab2.dir/Sources/Bezier.cpp.s
+CMakeFiles/kglab2.dir/Sources/Points.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/kglab2.dir/Sources/Points.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/korpatiy/Рабочий стол/kglab2/Sources/Points.cpp" -o CMakeFiles/kglab2.dir/Sources/Points.cpp.s
 
 # Object files for target kglab2
 kglab2_OBJECTS = \
 "CMakeFiles/kglab2.dir/main.cpp.o" \
 "CMakeFiles/kglab2.dir/Sources/Body.cpp.o" \
 "CMakeFiles/kglab2.dir/Sources/MainCreator.cpp.o" \
-"CMakeFiles/kglab2.dir/Sources/Bezier.cpp.o"
+"CMakeFiles/kglab2.dir/Sources/Points.cpp.o"
 
 # External object files for target kglab2
 kglab2_EXTERNAL_OBJECTS =
@@ -142,7 +142,7 @@ kglab2_EXTERNAL_OBJECTS =
 kglab2: CMakeFiles/kglab2.dir/main.cpp.o
 kglab2: CMakeFiles/kglab2.dir/Sources/Body.cpp.o
 kglab2: CMakeFiles/kglab2.dir/Sources/MainCreator.cpp.o
-kglab2: CMakeFiles/kglab2.dir/Sources/Bezier.cpp.o
+kglab2: CMakeFiles/kglab2.dir/Sources/Points.cpp.o
 kglab2: CMakeFiles/kglab2.dir/build.make
 kglab2: CMakeFiles/kglab2.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/home/korpatiy/Рабочий стол/kglab2/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable kglab2"

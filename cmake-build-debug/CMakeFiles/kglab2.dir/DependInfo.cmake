@@ -4,9 +4,9 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/korpatiy/Рабочий стол/kglab2/Sources/Bezier.cpp" "/home/korpatiy/Рабочий стол/kglab2/cmake-build-debug/CMakeFiles/kglab2.dir/Sources/Bezier.cpp.o"
   "/home/korpatiy/Рабочий стол/kglab2/Sources/Body.cpp" "/home/korpatiy/Рабочий стол/kglab2/cmake-build-debug/CMakeFiles/kglab2.dir/Sources/Body.cpp.o"
   "/home/korpatiy/Рабочий стол/kglab2/Sources/MainCreator.cpp" "/home/korpatiy/Рабочий стол/kglab2/cmake-build-debug/CMakeFiles/kglab2.dir/Sources/MainCreator.cpp.o"
+  "/home/korpatiy/Рабочий стол/kglab2/Sources/Points.cpp" "/home/korpatiy/Рабочий стол/kglab2/cmake-build-debug/CMakeFiles/kglab2.dir/Sources/Points.cpp.o"
   "/home/korpatiy/Рабочий стол/kglab2/main.cpp" "/home/korpatiy/Рабочий стол/kglab2/cmake-build-debug/CMakeFiles/kglab2.dir/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")

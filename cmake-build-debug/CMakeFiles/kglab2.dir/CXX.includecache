@@ -14,7 +14,9 @@ iostream
 cmath
 -
 
-/home/korpatiy/Рабочий стол/kglab2/Headers/Body.h
+/home/korpatiy/Рабочий стол/kglab2/Headers/Model.h
+
+/home/korpatiy/Рабочий стол/kglab2/Headers/Points.h
 GL/glew.h
 -
 glm/ext.hpp
@@ -23,22 +25,8 @@ glm/matrix.hpp
 /home/korpatiy/Рабочий стол/kglab2/Headers/glm/matrix.hpp
 Model.h
 /home/korpatiy/Рабочий стол/kglab2/Headers/Model.h
-iostream
-/home/korpatiy/Рабочий стол/kglab2/Headers/iostream
-
-/home/korpatiy/Рабочий стол/kglab2/Headers/Model.h
-
-/home/korpatiy/Рабочий стол/kglab2/Sources/Bezier.cpp
-../Headers/Bezier.h
+Bezier.h
 /home/korpatiy/Рабочий стол/kglab2/Headers/Bezier.h
-
-/home/korpatiy/Рабочий стол/kglab2/Sources/Body.cpp
-stb_image.h
--
-../Headers/Body.h
-/home/korpatiy/Рабочий стол/kglab2/Headers/Body.h
-MainCreator.h
-/home/korpatiy/Рабочий стол/kglab2/Sources/MainCreator.h
 
 /home/korpatiy/Рабочий стол/kglab2/Sources/MainCreator.h
 GL/glew.h
@@ -46,17 +34,9 @@ GL/glew.h
 iostream
 /home/korpatiy/Рабочий стол/kglab2/Sources/iostream
 
-/home/korpatiy/Рабочий стол/kglab2/main.cpp
-iostream
--
-GL/glew.h
--
-GLFW/glfw3.h
--
-chrono
--
-Headers/Body.h
-/home/korpatiy/Рабочий стол/kglab2/Headers/Body.h
-stb_image.h
--
+/home/korpatiy/Рабочий стол/kglab2/Sources/Points.cpp
+../Headers/Points.h
+/home/korpatiy/Рабочий стол/kglab2/Headers/Points.h
+MainCreator.h
+/home/korpatiy/Рабочий стол/kglab2/Sources/MainCreator.h
 

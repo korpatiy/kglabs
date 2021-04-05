@@ -88,7 +88,7 @@ bool Body::createShaderProgram() {
     g_shaderProgram = createProgram(vertexShader, fragmentShader);
 
     g_uMVP = glGetUniformLocation(g_shaderProgram, "u_mvp");
-    g_uVM = glGetUniformLocation(g_shaderProgram, "u_mv");
+    g_uMV = glGetUniformLocation(g_shaderProgram, "u_mv");
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
@@ -199,7 +199,7 @@ void Body::draw(GLfloat delta) {
                             glm::vec3(0.0f, 1.0f, 0.0f));
 
     glUniformMatrix4fv(g_uMVP, 1, GL_FALSE, glm::value_ptr(projection * view * model));
-    glUniformMatrix4fv(g_uVM, 1, GL_FALSE, glm::value_ptr(view * model));
+    glUniformMatrix4fv(g_uMV, 1, GL_FALSE, glm::value_ptr(view * model));
 
     glDrawElements(GL_TRIANGLES, g_model.indexCount, GL_UNSIGNED_INT, NULL);
 }

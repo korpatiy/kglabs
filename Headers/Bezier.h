@@ -35,8 +35,7 @@ using namespace std;
 /**
  * The Point2D class provides methods to store and handle 2d points.
  */
-class Point2D
-{
+class Point2D {
 public:
     /**
      * Point coordinates.
@@ -47,13 +46,17 @@ public:
      * Point2D constructor.
      */
     Point2D() { x = y = 0.0; };
+
     /**
      * Point2D constructor.
      *
      * @param x - x coordinate of the point.
      * @param y - y coordinate of the point.
      */
-    Point2D(double _x, double _y) { x = _x; y = _y; };
+    Point2D(double _x, double _y) {
+        x = _x;
+        y = _y;
+    };
 
     /**
      * Add other point to the current one.
@@ -61,32 +64,32 @@ public:
      * @param p - point to add.
      * @return summ of the current point and the given one.
      */
-    Point2D operator +(const Point2D &p) const { return Point2D(x + p.x, y + p.y); };
+    Point2D operator+(const Point2D &p) const { return Point2D(x + p.x, y + p.y); };
+
     /**
      * Subtract other point from the current one.
      *
      * @param p - point to subtract.
      * @return difference of the current point and the given one.
      */
-    Point2D operator -(const Point2D &p) const { return Point2D(x - p.x, y - p.y); };
+    Point2D operator-(const Point2D &p) const { return Point2D(x - p.x, y - p.y); };
+
     /**
      * Multiply current point by the real value.
      *
      * @param v - value to multiply by.
      * @return current point multiplied by the given value.
      */
-    Point2D operator *(double v) const { return Point2D(x * v, y * v); };
+    Point2D operator*(double v) const { return Point2D(x * v, y * v); };
 
     /**
      * Safely normalize current point.
      */
-    void normalize()
-    {
+    void normalize() {
         double l = sqrt(x * x + y * y);
         if (IS_ZERO(l))
             x = y = 0.0;
-        else
-        {
+        else {
             x /= l;
             y /= l;
         }
@@ -99,8 +102,7 @@ public:
      * @param p2 - second point.
      * @return absolute minimum of the given points' coordinates.
      */
-    static Point2D absMin(const Point2D &p1, const Point2D &p2)
-    {
+    static Point2D absMin(const Point2D &p1, const Point2D &p2) {
         return Point2D(abs(p1.x) < abs(p2.x) ? p1.x : p2.x, abs(p1.y) < abs(p2.y) ? p1.y : p2.y);
     };
 };
@@ -108,8 +110,7 @@ public:
 /**
  * The Segment class provides methods to store and calculate Bezier-based cubic curve segment.
  */
-class Segment
-{
+class Segment {
 public:
     /**
      * Bezier control points.
@@ -122,20 +123,19 @@ public:
      * @param t - parameter of the curve, should be in [0; 1].
      * @return intermediate Bezier curve point that corresponds the given parameter.
      */
-    Point2D calc(double t) const
-    {
+    Point2D calc(double t) const {
         double t2 = t * t;
         double t3 = t2 * t;
         double nt = 1.0 - t;
         double nt2 = nt * nt;
         double nt3 = nt2 * nt;
         return Point2D(nt3 * points[0].x + 3.0 * t * nt2 * points[1].x + 3.0 * t2 * nt * points[2].x + t3 * points[3].x,
-                       nt3 * points[0].y + 3.0 * t * nt2 * points[1].y + 3.0 * t2 * nt * points[2].y + t3 * points[3].y);
+                       nt3 * points[0].y + 3.0 * t * nt2 * points[1].y + 3.0 * t2 * nt * points[2].y +
+                       t3 * points[3].y);
     };
 };
 
-bool tbezierSO0(const vector<Point2D> &values, vector<Segment> &curve)
-{
+/*bool tbezierSO0(const vector<Point2D> &values, vector<Segment> &curve) {
     int n = values.size() - 1;
 
     if (n < 2)
@@ -150,15 +150,13 @@ bool tbezierSO0(const vector<Point2D> &values, vector<Segment> &curve)
     next = values[1] - values[0];
     next.normalize();
 
-    for (int i = 0; i < n; ++i)
-    {
+    for (int i = 0; i < n; ++i) {
         tgL = tgR;
         cur = next;
 
         deltaC = values[i + 1] - values[i];
 
-        if (i < n - 1)
-        {
+        if (i < n - 1) {
             next = values[i + 2] - values[i + 1];
             next.normalize();
             if (IS_ZERO(cur.x) || IS_ZERO(cur.y))
@@ -168,9 +166,7 @@ bool tbezierSO0(const vector<Point2D> &values, vector<Segment> &curve)
             else
                 tgR = cur + next;
             tgR.normalize();
-        }
-        else
-        {
+        } else {
             tgR = Point2D();
         }
 
@@ -200,14 +196,12 @@ bool tbezierSO0(const vector<Point2D> &values, vector<Segment> &curve)
         if (abs(l2 * tgR.y) > abs(deltaC.y))
             l2 = IS_ZERO(tgR.y) ? 0.0 : deltaC.y / tgR.y;
 
-        if (!zL && !zR)
-        {
+        if (!zL && !zR) {
             tmp = tgL.y / tgL.x - tgR.y / tgR.x;
-            if (!IS_ZERO(tmp))
-            {
-                x = (values[i + 1].y - tgR.y / tgR.x * values[i + 1].x - values[i].y + tgL.y / tgL.x * values[i].x) / tmp;
-                if (x > values[i].x && x < values[i + 1].x)
-                {
+            if (!IS_ZERO(tmp)) {
+                x = (values[i + 1].y - tgR.y / tgR.x * values[i + 1].x - values[i].y + tgL.y / tgL.x * values[i].x) /
+                    tmp;
+                if (x > values[i].x && x < values[i + 1].x) {
                     if (abs(l1) > abs(l2))
                         l1 = 0.0;
                     else
@@ -223,6 +217,6 @@ bool tbezierSO0(const vector<Point2D> &values, vector<Segment> &curve)
     }
 
     return true;
-}
+}*/
 
 #endif //KGLAB2_BEZIER_H

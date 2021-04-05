@@ -1,1 +1,1 @@
-/usr/bin/c++  -g   CMakeFiles/kglab2.dir/main.cpp.o CMakeFiles/kglab2.dir/Sources/Body.cpp.o CMakeFiles/kglab2.dir/Sources/MainCreator.cpp.o CMakeFiles/kglab2.dir/Sources/Bezier.cpp.o  -o kglab2  -lglfw -lGLEW -lGLEW -lGLU -lGL 
+/usr/bin/c++  -g   CMakeFiles/kglab2.dir/main.cpp.o CMakeFiles/kglab2.dir/Sources/Body.cpp.o CMakeFiles/kglab2.dir/Sources/MainCreator.cpp.o CMakeFiles/kglab2.dir/Sources/Points.cpp.o  -o kglab2  -lglfw -lGLEW -lGLEW -lGLU -lGL 
