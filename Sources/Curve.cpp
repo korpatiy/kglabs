@@ -3,7 +3,7 @@
 //
 
 #include "../Headers/Curve.h"
-#include "MainCreator.h"
+#include "../Headers/MainCreator.h"
 
 bool Curve::createCurveShaderProgram() {
     c_shaderProgram = 0;

@@ -4,7 +4,7 @@
 
 #include <stb_image.h>
 #include "../Headers/Body.h"
-#include "MainCreator.h"
+#include "../Headers/MainCreator.h"
 
 using namespace std;
 
@@ -21,32 +21,13 @@ bool Body::createShaderProgram() {
             ""
             "out vec3 v_normal;"
             "out vec3 v_pos;"
-            "out vec2 v_texCoord;"
-            ""
-            "float a = -0.7;"
-            ""
-            "float f(vec2 p) { return a * length(p) * sin(length(p)); }"
-            "vec3 grad(vec2 p)"
-            "{"
-            "float len = length(p);"
-            "if (len == 0) return vec3(0,1,0);"
-            "else"
-            "{"
-            "float coefficient = a * (sin(len) / len + cos(len));"
-            "float dx = -p.x * coefficient;"
-            "float dy = -p.y * coefficient;"
-            "return vec3(dx, 1.0, dy);"
-            "}"
-            "}"
             ""
             "void main()"
             "{"
-            "    float y = f(a_pos);"
             "    vec4 p0 = vec4(a_pos[0], y, a_pos[1], 1.0);"
-            "    v_normal = transpose(inverse(mat3(u_mv))) * normalize(grad(a_pos));"
+            "    v_normal = transpose(inverse(mat3(u_mv))) * normalize(a_pos);"
             "    v_pos = vec3(u_mv * p0);"
             "    gl_Position = u_mvp * p0;"
-            "    v_texCoord = a_pos / 5;"
             "}";
 
     const GLchar fsh[] =
@@ -54,12 +35,9 @@ bool Body::createShaderProgram() {
             ""
             "in vec3 v_normal;"
             "in vec3 v_pos;"
-            "in vec2 v_texCoord;"
             ""
             "layout(location = 0) out vec4 o_color;"
             ""
-            "uniform sampler2D u_map0;"
-            "uniform sampler2D u_map1;"
             ""
             "void main()"
             "{"
@@ -73,11 +51,7 @@ bool Body::createShaderProgram() {
             "   vec3 e = normalize(E - v_pos);"
             "   vec3 h = normalize(-l + e);"
             "   float s = pow(max(dot(n, h), 0.0), S);"
-            "   vec4 texColor = mix(texture(u_map0, v_texCoord), texture(u_map1, v_texCoord), 0.5);"
-            "   o_color = vec4(texColor * d + s * vec4(1.0));"
-            //"    o_color = texture(u_map0, v_texCoord);"
-            //"   o_color = vec4(color * d +s * vec3(1.0, 1.0, 1.0),1.0);"
-            //"   o_color = vec4(abs(n),1);"
+            "   o_color = vec4(color * d +s * vec3(1.0, 1.0, 1.0),1.0);"
             "}";
 
     GLuint vertexShader, fragmentShader;
@@ -96,21 +70,68 @@ bool Body::createShaderProgram() {
     return g_shaderProgram != 0;
 }
 
-bool Body::createModel() {
-    size_t n = 100;
-    size_t vertSize = 2 * n * n;
-    size_t idxSize = (n - 1) * (n - 1) * 6;
-
-    auto *vertices = new GLfloat[vertSize];
-    for (size_t i = 0; i < n; i++) {
+GLfloat *rotateModel(const float rev, const int n, const int size, const vector<Point2D> &points,
+                     vector<struct Point2D> normals) {
+    auto *vertices = new GLfloat[size];
+    for (size_t i = 0; i < rev; i++) {
+        auto model = glm::mat4(1.0f);
+        auto rad = (float) i * 360.0f / rev;
+        model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
+        model = glm::translate(model, glm::vec3(0.0f, 1.0f, 0.0f));
+        auto rotated = glm::rotate(model, glm::radians(rad), glm::vec3(1.0, 0.0, 0.0));
+        auto transposed = glm::transpose(glm::inverse(glm::mat3(rotated)));
         for (size_t j = 0; j < n; j++) {
-            size_t idx = 2 * (i * n + j);
-            vertices[idx] = 0.1f * (j - n / 2.0f);
-            vertices[idx + 1] = 0.1f * (i - n / 2.0f);
+            size_t idx = 6 * (i * n + j);
+            auto resultPos = rotated * glm::vec4(points[j].x, points[j].y, 0.0f, 1.0f);
+            auto resultNormal = transposed * glm::vec3(normals[i].x, normals[i].y, 0);
+            vertices[idx] = resultPos.x;
+            vertices[idx + 1] = resultPos.y;
+            vertices[idx + 2] = resultPos.z;
+            vertices[idx + 3] = resultNormal.x;
+            vertices[idx + 4] = resultNormal.y;
+            vertices[idx + 5] = resultNormal.z;
+        }
+    }
+    return vertices;
+}
+
+bool Body::createModel(const std::vector<Point2D> &points) {
+    const int rev = 64;
+
+    const int n = points.size();
+    const int vertSize = 6 * n * rev;
+    const int idxSize = 6 * (n - 1) * rev;
+    //  rotateModel(rev, n, vertSize, points);
+
+    auto p = points[0].y - points[2].y;
+    auto p1 = points[2].x - points[0].x;
+
+
+    normals.emplace_back(p, p1);
+    normals.push_back(normals[normals.size() - 1]);
+    for (int i = 0; i < points.size() - 2; i++) {
+        auto a = points[i].y - points[i + 2].y;
+        auto b = points[i + 2].x - points[i].x;
+        normals.emplace_back(a, b);
+    }
+    normals.push_back(normals[normals.size() - 1]);
+
+    auto *vertices = rotateModel(rev, n, vertSize, points, normals);
+
+    auto *indices = new GLuint[idxSize];
+    for (size_t i = 0; i < rev; i++) {
+        for (size_t j = 0; j < n - 1; j++) {
+            size_t idx = 6 * (i * (n - 1) + j);
+            indices[idx] = n * i + j;
+            indices[idx + 1] = n * i + j + 1;
+            indices[idx + 2] = n * (i + 1) + j + 1; //check it
+            indices[idx + 3] = n * (i + 1) + j + 1; //check it
+            indices[idx + 4] = n * (i + 1) + j;
+            indices[idx + 5] = n * i + j;
         }
     }
 
-    auto *indices = new GLuint[idxSize];
+    /*auto *indices = new GLuint[idxSize];
     for (size_t i = 0; i < n - 1; i++) {
         for (size_t j = 0; j < n - 1; j++) {
             size_t idx = 6 * (i * (n - 1) + j);
@@ -121,8 +142,7 @@ bool Body::createModel() {
             indices[idx + 4] = n * (i + 1) + j;
             indices[idx + 5] = n * i + j;
         }
-    }
-
+    }*/
 
     glGenVertexArrays(1, &g_model.vao);
     glBindVertexArray(g_model.vao);
@@ -138,52 +158,18 @@ bool Body::createModel() {
     g_model.indexCount = idxSize;
 
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (const GLvoid *) 0);
-    //glEnableVertexAttribArray(1);
-    //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (const GLvoid *) (3 * sizeof(GLfloat)));
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (const GLvoid *) 0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (const GLvoid *) (3 * sizeof(GLfloat)));
 
     delete[] vertices;
     delete[] indices;
     return g_model.vbo != 0 && g_model.ibo != 0 && g_model.vao != 0;
 }
 
-bool Body::createTexture() {
-    for (size_t i = 0; i < texCount; i++) {
-        GLsizei texW, texH, nrChannels;
-        GLvoid *image;
-        glGenTextures(1, &textures[i]);
-        glBindTexture(GL_TEXTURE_2D, textures[i]);
-
-        string way = "../textures/texture" + to_string(i) + ".jpg";
-        image = stbi_load(way.c_str(), &texW, &texH, &nrChannels, 0);
-        if (image) {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texW, texH, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-            glGenerateMipmap(GL_TEXTURE_2D);
-        } else {
-            cout << "Failed to load texture" << std::endl;
-            return false;
-        }
-        stbi_image_free(image);
-        // Установка параметров наложения текстуры
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        // Установка параметров фильтрации текстуры
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        mapLocation[i] = glGetUniformLocation(g_shaderProgram, ("u_map" + to_string(i)).c_str());
-    }
-    return true;
-}
-
 void Body::draw(GLfloat delta) {
     // Clear color buffer.
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    for (int i = 0; i < texCount; ++i) {
-        glActiveTexture(GL_TEXTURE0 + i);
-        glBindTexture(GL_TEXTURE_2D, textures[i]);
-        glUniform1i(mapLocation[i], i);
-    }
 
     glUseProgram(g_shaderProgram);
     glBindVertexArray(g_model.vao);
@@ -191,8 +177,7 @@ void Body::draw(GLfloat delta) {
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
     model = glm::rotate(model, glm::radians(delta), glm::vec3(0.0f, 1.0f, 0.0f));
-    model = glm::scale(model, glm::vec3(2.0f));
-
+    model = glm::scale(model, glm::vec3(1.0f));
 
     glm::mat4 view = lookAt(glm::vec3(10.0f, 40.0f, 30.0f),
                             glm::vec3(0.0f, 0.0f, 0.0f),
@@ -213,7 +198,4 @@ void Body::cleanup() {
         glDeleteBuffers(1, &g_model.ibo);
     if (g_model.vao != 0)
         glDeleteVertexArrays(1, &g_model.vao);
-    for (unsigned int &texture : textures) {
-        glDeleteTextures(1, &texture);
-    }
 }

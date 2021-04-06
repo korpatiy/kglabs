@@ -2,7 +2,7 @@
 // Created by korpatiy on 02.04.2021.
 //
 
-#include "MainCreator.h"
+#include "../Headers/MainCreator.h"
 
 using namespace std;
 

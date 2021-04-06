@@ -3,7 +3,7 @@
 //
 
 #include "../Headers/Points.h"
-#include "MainCreator.h"
+#include "../Headers/MainCreator.h"
 
 bool Points::createPointShaderProgram() {
     p_shaderProgram = 0;
@@ -36,7 +36,7 @@ bool Points::createPointShaderProgram() {
     fragmentShader = createShader(fshP, GL_FRAGMENT_SHADER);
 
     this->p_shaderProgram = createProgram(vertexShader, fragmentShader);
-    //this->p_uMV = glGetUniformLocation(p_shaderProgram, "u_MV");
+    this->p_uMV = glGetUniformLocation(p_shaderProgram, "u_MV");
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);

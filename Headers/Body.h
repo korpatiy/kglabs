@@ -6,10 +6,12 @@
 #define KGLAB2_BODY_H
 
 #include <GL/glew.h>
+#include <vector>
 #include "glm/ext.hpp"
 #include "glm/matrix.hpp"
 #include "Model.h"
 #include "iostream"
+#include "Bezier.h"
 
 const size_t texCount = 2;
 
@@ -18,16 +20,12 @@ public:
     Model g_model;
     GLuint g_shaderProgram;
     GLint g_uMVP, g_uMV;
-    GLint mapLocation[texCount];
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.f);
-
-    GLuint textures[texCount];
+    vector<Point2D> normals;
 
     bool createShaderProgram();
 
-    bool createModel();
-
-    bool createTexture();
+    bool createModel(const std::vector<struct Point2D>& vector);
 
     void draw(GLfloat delta);
 

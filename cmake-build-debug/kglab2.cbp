@@ -91,6 +91,9 @@
 		<Unit filename="/home/korpatiy/Рабочий стол/kglab2/Headers/Curve.h">
 			<Option target="kglab2"/>
 		</Unit>
+		<Unit filename="/home/korpatiy/Рабочий стол/kglab2/Headers/MainCreator.h">
+			<Option target="kglab2"/>
+		</Unit>
 		<Unit filename="/home/korpatiy/Рабочий стол/kglab2/Headers/Points.h">
 			<Option target="kglab2"/>
 		</Unit>
@@ -104,9 +107,6 @@
 			<Option target="kglab2"/>
 		</Unit>
 		<Unit filename="/home/korpatiy/Рабочий стол/kglab2/Sources/MainCreator.cpp">
-			<Option target="kglab2"/>
-		</Unit>
-		<Unit filename="/home/korpatiy/Рабочий стол/kglab2/Sources/MainCreator.h">
 			<Option target="kglab2"/>
 		</Unit>
 		<Unit filename="/home/korpatiy/Рабочий стол/kglab2/Sources/Points.cpp">

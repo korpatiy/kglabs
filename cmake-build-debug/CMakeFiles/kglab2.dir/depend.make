@@ -3,24 +3,25 @@
 
 CMakeFiles/kglab2.dir/Sources/Bezier.cpp.o: ../Sources/Bezier.cpp
 
+CMakeFiles/kglab2.dir/Sources/Body.cpp.o: ../Headers/Bezier.h
 CMakeFiles/kglab2.dir/Sources/Body.cpp.o: ../Headers/Body.h
+CMakeFiles/kglab2.dir/Sources/Body.cpp.o: ../Headers/MainCreator.h
 CMakeFiles/kglab2.dir/Sources/Body.cpp.o: ../Headers/Model.h
 CMakeFiles/kglab2.dir/Sources/Body.cpp.o: ../Sources/Body.cpp
-CMakeFiles/kglab2.dir/Sources/Body.cpp.o: ../Sources/MainCreator.h
 
 CMakeFiles/kglab2.dir/Sources/Curve.cpp.o: ../Headers/Bezier.h
 CMakeFiles/kglab2.dir/Sources/Curve.cpp.o: ../Headers/Curve.h
+CMakeFiles/kglab2.dir/Sources/Curve.cpp.o: ../Headers/MainCreator.h
 CMakeFiles/kglab2.dir/Sources/Curve.cpp.o: ../Headers/Model.h
 CMakeFiles/kglab2.dir/Sources/Curve.cpp.o: ../Sources/Curve.cpp
-CMakeFiles/kglab2.dir/Sources/Curve.cpp.o: ../Sources/MainCreator.h
 
+CMakeFiles/kglab2.dir/Sources/MainCreator.cpp.o: ../Headers/MainCreator.h
 CMakeFiles/kglab2.dir/Sources/MainCreator.cpp.o: ../Sources/MainCreator.cpp
-CMakeFiles/kglab2.dir/Sources/MainCreator.cpp.o: ../Sources/MainCreator.h
 
 CMakeFiles/kglab2.dir/Sources/Points.cpp.o: ../Headers/Bezier.h
+CMakeFiles/kglab2.dir/Sources/Points.cpp.o: ../Headers/MainCreator.h
 CMakeFiles/kglab2.dir/Sources/Points.cpp.o: ../Headers/Model.h
 CMakeFiles/kglab2.dir/Sources/Points.cpp.o: ../Headers/Points.h
-CMakeFiles/kglab2.dir/Sources/Points.cpp.o: ../Sources/MainCreator.h
 CMakeFiles/kglab2.dir/Sources/Points.cpp.o: ../Sources/Points.cpp
 
 CMakeFiles/kglab2.dir/main.cpp.o: ../Headers/Bezier.h

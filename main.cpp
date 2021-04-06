@@ -18,6 +18,7 @@ GLFWwindow *g_window;
 Body body;
 Points points;
 Curve curve;
+bool drawBody = false;
 
 void calculatePoints();
 
@@ -89,6 +90,12 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
         if (!curve.bezier_points.empty())
             curve.createCurveModel();
     }
+    if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+        if (points.base_points.size() < 2)
+            return;
+        drawBody = true;
+        body.createModel(curve.bezier_points);
+    }
 }
 
 void calculatePoints() {
@@ -135,9 +142,10 @@ int main() {
             // Draw scene.
             points.drawPoints();
             curve.drawCurve();
-            /*  if (delta > 360) delta = 0;
-              body.drawPoints(delta);
-              delta++;*/
+            if (delta > 360) delta = 0;
+            if(drawBody)
+                body.draw(4);
+            delta++;
 
             // Swap buffers.
             glfwSwapBuffers(g_window);
@@ -149,7 +157,7 @@ int main() {
     // Cleanup graphical resources.
     points.cleanup();
     curve.cleanup();
-
+    body.cleanup();
     // Tear down OpenGL.
     tearDownOpenGL();
 
