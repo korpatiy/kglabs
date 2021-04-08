@@ -85,16 +85,23 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
         y_pos = 1. - y_pos / height * 2.;
 
         points.base_points.emplace_back(x_pos, y_pos);
-        calculatePoints();
-        if (!curve.bezier_points.empty())
+
+        if (points.base_points.size() < 2)
+            return;
+        if (points.base_points.size() == 2) {
+            curve.bezier_points = points.base_points;
             curve.createCurveModel();
+            return;
+        }
+        calculatePoints();
+        curve.createCurveModel();
     }
-    /*if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+    if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
         if (points.base_points.size() < 2)
             return;
         drawBody = true;
         body.createModel(curve.bezier_points);
-    }*/
+    }
 }
 
 void calculatePoints() {
@@ -117,7 +124,7 @@ bool init() {
     glEnable(GL_DEPTH_TEST);
 
     return points.createPointShaderProgram() && points.createPointModel()
-           && curve.createCurveShaderProgram();
+           && curve.createCurveShaderProgram() && body.createShaderProgram();
 }
 
 
@@ -141,10 +148,11 @@ int main() {
             // Draw scene.
             points.drawPoints();
             curve.drawCurve();
-            /*if (delta > 360) delta = 0;
+
+            if (delta > 360) delta = 0;
             if(drawBody)
-                body.draw(4);
-            delta++;*/
+                body.draw(delta);
+            delta++;
 
             // Swap buffers.
             glfwSwapBuffers(g_window);

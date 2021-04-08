@@ -14,7 +14,7 @@ bool Body::createShaderProgram() {
     const GLchar vsh[] =
             "#version 330\n"
             ""
-            "layout(location = 0) in vec2 a_pos;"
+            "layout(location = 0) in vec3 a_pos;"
             ""
             "uniform mat4 u_mvp;"
             "uniform mat4 u_mv;"
@@ -24,7 +24,7 @@ bool Body::createShaderProgram() {
             ""
             "void main()"
             "{"
-            "    vec4 p0 = vec4(a_pos[0], y, a_pos[1], 1.0);"
+            "    vec4 p0 = vec4(a_pos, 1.0);"
             "    v_normal = transpose(inverse(mat3(u_mv))) * normalize(a_pos);"
             "    v_pos = vec3(u_mv * p0);"
             "    gl_Position = u_mvp * p0;"
@@ -96,7 +96,7 @@ GLfloat *rotateModel(const float rev, const int n, const int size, const vector<
 }
 
 bool Body::createModel(const std::vector<Point2D> &points) {
-    const int rev = 64;
+    const int rev = 128;
 
     const int n = points.size();
     const int vertSize = 6 * n * rev;
@@ -177,7 +177,7 @@ void Body::draw(GLfloat delta) {
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
     model = glm::rotate(model, glm::radians(delta), glm::vec3(0.0f, 1.0f, 0.0f));
-    model = glm::scale(model, glm::vec3(1.0f));
+    model = glm::scale(model, glm::vec3(10.0f));
 
     glm::mat4 view = lookAt(glm::vec3(10.0f, 40.0f, 30.0f),
                             glm::vec3(0.0f, 0.0f, 0.0f),
