@@ -23,7 +23,7 @@ bool drawBody = false;
 void calculatePoints();
 
 void reshape(GLFWwindow *window, int width, int height) {
-    body.projection = glm::perspective(glm::radians(45.0f), GLfloat(width) / GLfloat(height), 0.1f, 100.f);
+    // body.projection = glm::perspective(glm::radians(45.0f), GLfloat(width) / GLfloat(height), 0.1f, 100.f);
     glViewport(0, 0, width, height);
 }
 
@@ -79,23 +79,23 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
         int width = 0, height = 0;
         double x_pos, y_pos;
         glfwGetCursorPos(window, &x_pos, &y_pos);
-        glfwGetWindowSize(g_window, &width, &height);
+        glfwGetWindowSize(window, &width, &height);
 
         x_pos = x_pos / width * 2. - 1.;
         y_pos = 1. - y_pos / height * 2.;
 
         points.base_points.emplace_back(x_pos, y_pos);
 
-        calculatePoints();
-        if (!curve.bezier_points.empty())
-            curve.createCurveModel();
+        /*  calculatePoints();
+          if (!curve.bezier_points.empty())
+              curve.createCurveModel();*/
     }
-    if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+    /*if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
         if (points.base_points.size() < 2)
             return;
         drawBody = true;
         body.createModel(curve.bezier_points);
-    }
+    }*/
 }
 
 void calculatePoints() {
@@ -141,11 +141,11 @@ int main() {
 
             // Draw scene.
             points.drawPoints();
-            curve.drawCurve();
+            /*curve.drawCurve();
             if (delta > 360) delta = 0;
             if(drawBody)
                 body.draw(4);
-            delta++;
+            delta++;*/
 
             // Swap buffers.
             glfwSwapBuffers(g_window);

@@ -11,13 +11,13 @@ bool Points::createPointShaderProgram() {
     const GLchar vshP[] =
             "#version 330\n"
             ""
-            "layout(location = 0) in vec2 a_position;"
+            "layout(location = 0) in vec3 a_position;"
             ""
             "uniform mat4 u_MV;"
             ""
             "void main()"
             "{"
-            "    gl_Position = u_MV * vec4(a_position, 0.0, 1.0);"
+            "    gl_Position = u_MV * vec4(a_position, 1.0);"
             "}";
 
     const GLchar fshP[] =
@@ -35,8 +35,8 @@ bool Points::createPointShaderProgram() {
     vertexShader = createShader(vshP, GL_VERTEX_SHADER);
     fragmentShader = createShader(fshP, GL_FRAGMENT_SHADER);
 
-    this->p_shaderProgram = createProgram(vertexShader, fragmentShader);
-    this->p_uMV = glGetUniformLocation(p_shaderProgram, "u_MV");
+    p_shaderProgram = createProgram(vertexShader, fragmentShader);
+    p_uMV = glGetUniformLocation(p_shaderProgram, "u_MV");
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
@@ -47,10 +47,10 @@ bool Points::createPointShaderProgram() {
 bool Points::createPointModel() {
 
     const GLfloat vertices[] = {
-            -0.3f, -0.5,
-            0.5f, -0.5f,
-            0.5f, 0.5f,
-            -0.3f, 0.5f
+            -0.3f, -0.5f, 0.0f,
+            0.5f, -0.5f, 0.0f,
+            0.5f, 0.5f, 0.0f,
+            -0.3f, 0.5f, 0.0f
     };
 
     const GLuint indices[] = {
@@ -62,7 +62,7 @@ bool Points::createPointModel() {
 
     glGenBuffers(1, &p_model.vbo);
     glBindBuffer(GL_ARRAY_BUFFER, p_model.vbo);
-    glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
 
     glGenBuffers(1, &p_model.ibo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, p_model.ibo);
@@ -71,7 +71,7 @@ bool Points::createPointModel() {
     p_model.indexCount = 6;
 
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (const GLvoid *) 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (const GLvoid *) 0);
 
     // delete[] vertices;
     // delete[] indices;
@@ -98,8 +98,8 @@ void Points::drawPoints() {
     for (Point2D p: base_points) {
         auto model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(p.x, p.y, 0.0f));
-        model = glm::scale(model, glm::vec3(0.02));
-        glUniformMatrix4fv(this->p_uMV, 1, GL_FALSE, glm::value_ptr(model));
-        glDrawElements(GL_TRIANGLES, p_model.indexCount, GL_UNSIGNED_INT, NULL);
+        model = glm::scale(model, glm::vec3(0.03f));
+        glUniformMatrix4fv(p_uMV, 1, GL_FALSE, glm::value_ptr(model));
+        glDrawElements(GL_TRIANGLES, p_model.indexCount, GL_UNSIGNED_INT, 0);
     }
 }
