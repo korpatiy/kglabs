@@ -100,7 +100,7 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
         if (points.base_points.size() < 2)
             return;
         drawBody = true;
-        if (points.base_points.size() == 2) {
+        /*if (points.base_points.size() == 2) {
             auto vec1 = curve.bezier_points[0] - curve.bezier_points[1];
             auto vec2 = curve.bezier_points[1] - curve.bezier_points[0];
             vec1.normalize();
@@ -117,17 +117,17 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
         vec2.normalize();
         auto normal = vec1 + vec2;
         normal.normalize();
-        body.normals.emplace_back(normal.x, normal.y);
+        body.normals.emplace_back(normal.x, normal.y);*/
 
-        for (int i = 0; i < curve.bezier_points.size() - 2; i++) {
-            vec1 = curve.bezier_points[i] - curve.bezier_points[i + 2];
-            vec2 = curve.bezier_points[i + 2] - curve.bezier_points[i];
+       /* for (int i = 1; i < curve.bezier_points.size() - 1; i++) {
+            auto vec1 = curve.bezier_points[i] - curve.bezier_points[i - 1];
+            auto vec2 = curve.bezier_points[i +1] - curve.bezier_points[i];
             vec1.normalize();
             vec2.normalize();
-            normal = vec1 + vec2;
+            auto normal = vec1 + vec2;
             body.normals.emplace_back(normal.x, normal.y);
         }
-        body.normals.push_back(body.normals[body.normals.size() - 1]);
+        body.normals.push_back(body.normals[body.normals.size() - 1]);*/
         body.createModel(curve.bezier_points);
     }
 }

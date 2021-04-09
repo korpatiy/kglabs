@@ -27,9 +27,8 @@ bool Body::createShaderProgram() {
             "void main()"
             "{"
             "    vec4 p0 = vec4(a_pos, 1.0);"
-            //"    v_normal = u_normal * ;"
-            "    v_normal = transpose(inverse(mat3(u_mv))) * a_pos;"
-           // "    v_normal = transpose(inverse(mat3(u_mv))) * normalize(a_pos);"
+            "    v_normal = u_normal * a_normal;"
+            //"  v_normal = transpose(inverse(mat3(u_mv))) * a_normal;"
             "    v_pos = vec3(u_mv * p0);"
             "    gl_Position = u_mvp * p0;"
             "}";
@@ -77,7 +76,7 @@ bool Body::createShaderProgram() {
 }
 
 GLfloat *rotateModel(const float rev, const int n, const int size, const vector<Point2D> &points,
-                     vector<struct Point2D> normals) {
+                     vector<Point2D> normals) {
     auto *vertices = new GLfloat[size];
     for (size_t i = 0; i <= rev; i++) {
         auto model = glm::mat4(1.0f);
@@ -104,6 +103,16 @@ bool Body::createModel(const std::vector<Point2D> &points) {
     const int n = points.size();
     const int vertSize = 6 * n * (rev + 1);
     const int idxSize = 6 * n * rev;
+
+    for (int i = 1; i < points.size() - 1; i++) {
+        auto vec1 = points[i] - points[i - 1];
+        auto vec2 = points[i +1] - points[i];
+        vec1.normalize();
+        vec2.normalize();
+        auto normal = vec1 + vec2;
+        normals.emplace_back(normal.x, normal.y);
+    }
+    normals.push_back(normals[normals.size() - 1]);
 
     auto *vertices = rotateModel(rev, n, vertSize, points, normals);
 
@@ -160,7 +169,7 @@ void Body::draw(GLfloat delta) {
                             glm::vec3(0.0f, 0.0f, 0.0f),
                             glm::vec3(0.0f, 1.0f, 0.0f));
 
-    glUniformMatrix4fv(g_uNorm, 1, GL_FALSE, glm::value_ptr(glm::transpose(glm::inverse(glm::mat3(view * model)))));
+    glUniformMatrix3fv(g_uNorm, 1, GL_FALSE, glm::value_ptr(glm::transpose(glm::inverse(glm::mat3(view * model)))));
     glUniformMatrix4fv(g_uMVP, 1, GL_FALSE, glm::value_ptr(projection * view * model));
     glUniformMatrix4fv(g_uMV, 1, GL_FALSE, glm::value_ptr(view * model));
 
