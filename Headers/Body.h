@@ -19,7 +19,7 @@ class Body {
 public:
     Model g_model;
     GLuint g_shaderProgram;
-    GLint g_uMVP, g_uMV;
+    GLint g_uMVP, g_uMV, g_uNorm;
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.f);
     vector<Point2D> normals;
 
