@@ -28,7 +28,7 @@ bool Body::createShaderProgram() {
             "{"
             "    vec4 p0 = vec4(a_pos, 1.0);"
             "    v_normal = u_normal * a_normal;"
-            //"  v_normal = transpose(inverse(mat3(u_mv))) * a_normal;"
+            //"    v_normal = u_normal * a_pos;"
             "    v_pos = vec3(u_mv * p0);"
             "    gl_Position = u_mvp * p0;"
             "}";
@@ -44,7 +44,7 @@ bool Body::createShaderProgram() {
             ""
             "void main()"
             "{"
-            "   float S = 50;"
+            "   float S = 10;"
             "   vec3 color = vec3(1, 0, 0);"
             "   vec3 n = normalize(v_normal);"
             "   vec3 E = vec3(0, 0, 0);"
@@ -80,7 +80,7 @@ GLfloat *rotateModel(const float rev, const int n, const int size, const vector<
     auto *vertices = new GLfloat[size];
     for (size_t i = 0; i <= rev; i++) {
         auto model = glm::mat4(1.0f);
-        auto rad = (float) i * 360.0f / rev;
+        auto rad = 360.0f * i / rev;
         auto rotated = glm::rotate(model, glm::radians(rad), glm::vec3(1.0, 0.0, 0.0));
         for (size_t j = 0; j < n; j++) {
             size_t idx = 6 * (i * n + j);
@@ -98,7 +98,7 @@ GLfloat *rotateModel(const float rev, const int n, const int size, const vector<
 }
 
 bool Body::createModel(const std::vector<Point2D> &points) {
-    const int rev = 64;
+    const int rev = 200;
 
     const int n = points.size();
     const int vertSize = 6 * n * (rev + 1);
@@ -106,10 +106,12 @@ bool Body::createModel(const std::vector<Point2D> &points) {
 
     for (int i = 1; i < points.size() - 1; i++) {
         auto vec1 = points[i] - points[i - 1];
-        auto vec2 = points[i +1] - points[i];
+        auto vec2 = points[i + 1] - points[i];
         vec1.normalize();
         vec2.normalize();
         auto normal = vec1 + vec2;
+        swap(normal.x, normal.y);
+        normal.x *= -1.0f;
         normals.emplace_back(normal.x, normal.y);
     }
     normals.push_back(normals[normals.size() - 1]);
@@ -128,7 +130,6 @@ bool Body::createModel(const std::vector<Point2D> &points) {
             indices[idx + 5] = n * i + j + 1;
         }
     }
-
 
     glGenVertexArrays(1, &g_model.vao);
     glBindVertexArray(g_model.vao);
