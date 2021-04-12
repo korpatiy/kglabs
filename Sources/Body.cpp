@@ -44,7 +44,7 @@ bool Body::createShaderProgram() {
             ""
             "void main()"
             "{"
-            "   float S = 10;"
+            "   float S = 60;"
             "   vec3 color = vec3(1, 0, 0);"
             "   vec3 n = normalize(v_normal);"
             "   vec3 E = vec3(0, 0, 0);"
@@ -53,8 +53,9 @@ bool Body::createShaderProgram() {
             "   float d = max(dot(n, -l), 0.3);"
             "   vec3 e = normalize(E - v_pos);"
             "   vec3 h = normalize(-l + e);"
-            "   float s = pow(max(dot(n, h), 0.0), S);"
+            "   float s = pow(max(dot(n, h), 0.0), S) * 0.5;"
             "   vec3 f_color = color * d +s * vec3(1.0, 1.0, 1.0);"
+            //"   o_color = vec4(f_color, 1.0);"
             "   o_color = vec4(pow(f_color, vec3(1.0 / 2.2)), 1.0);"
             "}";
 
@@ -75,30 +76,8 @@ bool Body::createShaderProgram() {
     return g_shaderProgram != 0;
 }
 
-GLfloat *rotateModel(const float rev, const int n, const int size, const vector<Point2D> &points,
-                     vector<Point2D> normals) {
-    auto *vertices = new GLfloat[size];
-    for (size_t i = 0; i <= rev; i++) {
-        auto model = glm::mat4(1.0f);
-        auto rad = 360.0f * i / rev;
-        auto rotated = glm::rotate(model, glm::radians(rad), glm::vec3(1.0, 0.0, 0.0));
-        for (size_t j = 0; j < n; j++) {
-            size_t idx = 6 * (i * n + j);
-            auto resultPos = rotated * glm::vec4(points[j].x, points[j].y, 0.0f, 1.0f);
-            auto resultNormal = rotated * glm::vec4(normals[i].x, normals[i].y, 0.0f, 1.0f);
-            vertices[idx] = resultPos.x;
-            vertices[idx + 1] = resultPos.y;
-            vertices[idx + 2] = resultPos.z;
-            vertices[idx + 3] = resultNormal.x;
-            vertices[idx + 4] = resultNormal.y;
-            vertices[idx + 5] = resultNormal.z;
-        }
-    }
-    return vertices;
-}
-
 bool Body::createModel(const std::vector<Point2D> &points) {
-    const int rev = 200;
+    const int rev = 128;
 
     const int n = points.size();
     const int vertSize = 6 * n * (rev + 1);
@@ -116,18 +95,34 @@ bool Body::createModel(const std::vector<Point2D> &points) {
     }
     normals.push_back(normals[normals.size() - 1]);
 
-    auto *vertices = rotateModel(rev, n, vertSize, points, normals);
+    auto *vertices = new GLfloat[vertSize];
+    for (size_t i = 0; i <= rev; i++) {
+        auto model = glm::mat4(1.0f);
+        auto rad = 360.0f * i / rev;
+        auto rotated = glm::rotate(model, glm::radians(rad), glm::vec3(0.0, 0.0, 0.0));
+        for (size_t j = 0; j < n; j++) {
+            size_t idx = 6 * (i * n + j);
+            auto resultPos = rotated * glm::vec4(points[j].x, points[j].y, 0.0f, 1.0f);
+            auto resultNormal = rotated * glm::vec4(normals[i].x, normals[i].y, 0.0f, 1.0f);
+            vertices[idx] = resultPos.x;
+            vertices[idx + 1] = resultPos.y;
+            vertices[idx + 2] = resultPos.z;
+            vertices[idx + 3] = resultNormal.x;
+            vertices[idx + 4] = resultNormal.y;
+            vertices[idx + 5] = resultNormal.z;
+        }
+    }
 
     auto *indices = new GLuint[idxSize];
     for (size_t i = 0; i < rev; i++) {
         for (size_t j = 0; j < n - 1; j++) {
-            size_t idx = 6 * (i * (n - 1) + j);
+            size_t idx = 6 * (i * n + j);
             indices[idx] = n * i + j;
-            indices[idx + 1] = n * i + j + 1;
+            indices[idx + 1] = n * i + (j + 1);
             indices[idx + 2] = n * (i + 1) + j;
             indices[idx + 3] = n * (i + 1) + j;
-            indices[idx + 4] = n * (i + 1) + j + 1;
-            indices[idx + 5] = n * i + j + 1;
+            indices[idx + 4] = n * (i + 1) + (j + 1);
+            indices[idx + 5] = n * i + (j + 1);
         }
     }
 
@@ -147,7 +142,8 @@ bool Body::createModel(const std::vector<Point2D> &points) {
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (const GLvoid *) 0);
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (const GLvoid *) (3 * sizeof(GLfloat)));
+    //(const GLvoid *) (3 * sizeof(GLfloat)
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (const GLvoid *) (const GLvoid *) (3 * sizeof(GLfloat)));
 
     delete[] vertices;
     delete[] indices;
